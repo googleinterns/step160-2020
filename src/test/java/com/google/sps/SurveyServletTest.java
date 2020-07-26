@@ -1,6 +1,7 @@
 
 import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
 import static org.junit.Assert.assertEquals;
+imoprt static org.junit.Assert.assertThrows;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -268,5 +269,48 @@ public class SurveyServletTest {
         DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
         List<PanasFeelings> expected = List.of();
         assertEquals(expected, SurveyServlet.queryMostIntense());
+    }
+
+    @Test
+    public void testGetUser() {
+        Map<String, SurveyResponse> expectedData = generateExpectedData(false);
+        assertEquals("Foo", expectedData.get("Foo").getUser());
+        assertEquals("Bar", expectedData.get("Bar").getUser());
+        assertEquals("Baz", expectedData.get("Baz").getUser());
+    }
+
+    @Test
+    public void testGetFeelings() {
+        Map<String, SurveyResponse> expectedData = generateExpectedData(false);
+        assertEquals(fooFeelings, expectedData.get("Foo").getFeelings());
+        assertEquals(barFeelings, expectedData.get("Bar").getFeelings());
+        assertEquals(bazFeelings, expectedData.get("Baz").getFeelings());
+        Map<PanasFeelings, PanasIntensity> immutableMap = expectedData.get("Foo").getFeelings();
+        assertThrows(UnsupportedOperationException.class, 
+            immutableMap.put(PanasFeelings.PROUD, PanasIntensity.QUITE_A_BIT));
+    }
+
+    @Test
+    public void testGetText() {
+        Map<String, SurveyResponse> expectedData = generateExpectedData(false);
+        assertEquals(fooText, expectedData.get("Foo").getText());
+        assertEquals(barText, expectedData.get("Bar").getText());
+        assertEquals(bazText, expectedData.get("Baz").getText());
+    }
+
+    @Test
+    public void testGetZipcode() {
+        Map<String, SurveyResponse> expectedData = generateExpectedData(false);
+        assertEquals(fooZipcode, expectedData.get("Foo").getZipcode());
+        assertEquals(barZipcode, expectedData.get("Bar").getZipcode());
+        assertEquals(bazZipcode, expectedData.get("Baz").getZipcode());
+    }
+
+    @Test
+    public void testGetTimestamp() {
+        Map<String, SurveyResponse> expectedData = generateExpectedData(false);
+        assertEquals(fooTimestamp, expectedData.get("Foo").getTimestamp());
+        assertEquals(barTimestamp, expectedData.get("Bar").getTimestamp());
+        assertEquals(bazTimestamp, expectedData.get("Baz").getTimestamp());
     }
 }

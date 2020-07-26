@@ -47,6 +47,7 @@ public class SurveyServlet extends HttpServlet {
     */
     public List<PanasFeelings> queryMostIntense() {}
 
+    // TODO add all the comments
     class SurveyResponse {
 
         public SurveyResponse(String user, 
@@ -55,16 +56,26 @@ public class SurveyServlet extends HttpServlet {
             String zipcode
             long timestamp) {}
 
+        /** Returns the username included in the survey response.*/
         public String getUser() {}
 
-    // return immutable things
+        /**
+        * Returns an immutable map representing the feelings (and their intensities) included 
+        * in the survey response.
+        */
         public Map<PanasFeelings, PanasIntensity> getFeelings() {}
 
+        /** Returns the text included in the survey response.*/
         public String getText() {}
 
+        /** Returns the zipcode included in the survey response as a String.*/
         public String getZipcode() {}
 
-        public String getTimpestamp() {}
+        /**
+        * Returns the timestamp at which the survey response was processed by the server, in 
+        * UNIX time.
+        */
+        public long getTimpestamp() {}
 
     }
 }
