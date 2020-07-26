@@ -27,8 +27,17 @@ public class SurveyServlet extends HttpServlet {
     */
     public Set<SurveyResponse> queryByFeeling(PanasFeelings feeling) {}
 
+    /** 
+    * Queries the project's DataStore and returns the set of {@code SurveyResponse} instances 
+    * that represent the survey responses submitted by {@code user}.
+    */
     public Set<SurveyResponse> queryByUser(String user) {}
 
+    /** 
+    * Queries the project's DataStore and returns an ordered list of the top three {@code PanasFeelings} 
+    * included in survey responses, descending. Tie breaks are won by the feeling included most recently 
+    * in a survey response, and then alphabetically.
+    */
     public List<PanasFeelings> queryMostWidespread() {}
 
     public List<PanasFeelings> queryMostIntense() {}

@@ -9,6 +9,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.After;
@@ -50,7 +51,7 @@ public class SurveyServletTest {
     }
 
 
-    // Creating SurveyResponse instances to use in queryByFeeling tests:
+    // Creating SurveyResponse instances to use in tests:
 
     private static final Map<PanasFeelings, PanasIntensity> fooFeelings = new HashMap<>();
     fooFeelings.put(PanasFeelings.JITTERY, PanasIntensity.EXTREMELY);
@@ -76,7 +77,7 @@ public class SurveyServletTest {
     private static final String bazZipcode = "90210";
 
     private static final long fooTimestamp = 1595706791802;
-    private static final long barTimestamp = 1595706815986;
+    private static final long barTimestamp = 1595795898000;
     private static final long bazTimestamp = 1595706828426;
 
     private Map<String, SurveyResponse> generateExpectedData(boolean sameUser) {
@@ -231,5 +232,23 @@ public class SurveyServletTest {
         loadTestData(ds, false);
         Set<SurveyResponse> expected = Set.of();
         assertEquals(expected, SurveyServlet.queryByUser("Peter"));
+    }
+
+    @Test
+    public void testQueryMostWidespread() {
+        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+        loadTestData(ds, false);
+        List<PanasFeelings> expected = List.of(
+            PanasFeelings.ALERT,
+            PanasFeelings.JITTERY,
+            PanasFeelings.AFRAID);
+        assertEquals(expected, SurveyServlet.queryMostWidespread());
+    }
+
+    @Test
+    public void testQueryMostWidespreadEmpty() {
+        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+        List<PanasFeelings> expected = List.of();
+        assertEquals(expected, SurveyServlet.queryMostWidespread());
     }
 }
