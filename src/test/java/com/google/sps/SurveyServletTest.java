@@ -55,12 +55,12 @@ public class SurveyServletTest {
 
     private static final Map<PanasFeelings, PanasIntensity> fooFeelings = new HashMap<>();
     fooFeelings.put(PanasFeelings.JITTERY, PanasIntensity.EXTREMELY);
-    fooFeelings.put(PanasFeelings.ALERT, PanasIntensity.VERY_SLIGHTLY);
+    fooFeelings.put(PanasFeelings.ALERT, PanasIntensity.QUITE_A_BIT);
     fooFeelings.put(PanasFeelings.UPSET, PanasIntensity.QUITE_A_BIT);
 
     private static final Map<PanasFeelings, PanasIntensity> barFeelings = new HashMap<>();
-    barFeelings.put(PanasFeelings.JITTERY, PanasIntensity.MODERATELY);
-    barFeelings.put(PanasFeelings.ALERT, PanasIntensity.A_LITTLE);
+    barFeelings.put(PanasFeelings.JITTERY, PanasIntensity.EXTREMELY);
+    barFeelings.put(PanasFeelings.ALERT, PanasIntensity.EXTREMELY);
     barFeelings.put(PanasFeelings.AFRAID, PanasIntensity.QUITE_A_BIT);
     barFeelings.put(PanasFeelings.NERVOUS, PanasIntensity.QUITE_A_BIT);
 
@@ -250,5 +250,23 @@ public class SurveyServletTest {
         DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
         List<PanasFeelings> expected = List.of();
         assertEquals(expected, SurveyServlet.queryMostWidespread());
+    }
+
+    @Test
+    public void testQueryMostIntense() {
+        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+        loadTestData(ds, false);
+        List<PanasFeelings> expected = List.of(
+            PanasFeelings.JITTERY,
+            PanasFeelings.ALERT,
+            PanasFeelings.AFRAID);
+        assertEquals(expected, SurveyServlet.queryMostIntense());
+    }
+
+    @Test
+    public void testQueryMostInteseEmpty() {
+        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+        List<PanasFeelings> expected = List.of();
+        assertEquals(expected, SurveyServlet.queryMostIntense());
     }
 }

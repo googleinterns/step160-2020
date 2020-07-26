@@ -34,12 +34,17 @@ public class SurveyServlet extends HttpServlet {
     public Set<SurveyResponse> queryByUser(String user) {}
 
     /** 
-    * Queries the project's DataStore and returns an ordered list of the top three {@code PanasFeelings} 
-    * included in survey responses, descending. Tie breaks are won by the feeling included most recently 
-    * in a survey response, and then alphabetically.
+    * Queries the project's DataStore and returns an ordered list of the three {@code PanasFeelings} 
+    * with the highest count included in survey responses, descending. Tie breaks are won by the 
+    * feeling included most recently in a survey response, and then alphabetically.
     */
     public List<PanasFeelings> queryMostWidespread() {}
 
+    /** 
+    * Queries the project's DataStore and returns an ordered list of the three {@code PanasFeelings} 
+    * with the highest average intensities included in survey responses, descending. Tie breaks are 
+    * won by the feeling included most recently in a survey response, and then alphabetically.
+    */
     public List<PanasFeelings> queryMostIntense() {}
 
     class SurveyResponse {
@@ -52,6 +57,7 @@ public class SurveyServlet extends HttpServlet {
 
         public String getUser() {}
 
+    // return immutable things
         public Map<PanasFeelings, PanasIntensity> getFeelings() {}
 
         public String getText() {}
