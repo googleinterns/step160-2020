@@ -52,21 +52,18 @@ public class SurveyServletTest {
 
     // Creating SurveyResponse instances to use in queryByFeeling tests:
 
-    private static final Map<PanasFeelings, PanasIntensity> fooFeelings = 
-        new HashMap<>();
+    private static final Map<PanasFeelings, PanasIntensity> fooFeelings = new HashMap<>();
     fooFeelings.put(PanasFeelings.JITTERY, PanasIntensity.EXTREMELY);
     fooFeelings.put(PanasFeelings.ALERT, PanasIntensity.VERY_SLIGHTLY);
     fooFeelings.put(PanasFeelings.UPSET, PanasIntensity.QUITE_A_BIT);
 
-    private static final Map<PanasFeelings, PanasIntensity> barFeelings = 
-        new HashMap<>();
+    private static final Map<PanasFeelings, PanasIntensity> barFeelings = new HashMap<>();
     barFeelings.put(PanasFeelings.JITTERY, PanasIntensity.MODERATELY);
     barFeelings.put(PanasFeelings.ALERT, PanasIntensity.A_LITTLE);
     barFeelings.put(PanasFeelings.AFRAID, PanasIntensity.QUITE_A_BIT);
     barFeelings.put(PanasFeelings.NERVOUS, PanasIntensity.QUITE_A_BIT);
 
-    private static final Map<PanasFeelings, PanasIntensity> bazFeelings = 
-        new HashMap<>();
+    private static final Map<PanasFeelings, PanasIntensity> bazFeelings = new HashMap<>();
     bazFeelings.put(PanasFeelings.ALERT, PanasIntensity.QUITE_A_BIT);
     bazFeelings.put(PanasFeelings.PROUD, PanasIntensity.QUITE_A_BIT);
 
@@ -82,30 +79,50 @@ public class SurveyServletTest {
     private static final long barTimestamp = 1595706815986;
     private static final long bazTimestamp = 1595706828426;
 
-    private static final SurveyResponse fooSurveyResponse = new SurveyResponse(
-        "Foo",
-        fooFeelings,
-        fooText,
-        fooZipcode,
-        fooTimestamp
-    );
-    private static final SurveyResponse barSurveyResponse = new SurveyResponse(
-        "Bar",
-        barFeelings,
-        barText,
-        barZipcode,
-        barTimestamp
-    );
-    private static final SurveyResponse bazSurveyResponse = new SurveyResponse(
-        "Baz",
-        bazFeelings,
-        bazText,
-        bazZipcode,
-        bazTimestamp
-    );
+    private Map<String, SurveyResponse> generateExpectedData(boolean sameUser) {
+        private static final SurveyResponse fooSurveyResponse = new SurveyResponse(
+            "Foo",
+            fooFeelings,
+            fooText,
+            fooZipcode,
+            fooTimestamp
+        );
 
+        private final String barUser;
+        private final String bazUser;
 
-    private void loadQueryByFeelingTestData(DatastoreService ds) {
+        if (sameUser) {
+            barUser = "Foo";
+            bazUser = "Foo";
+        } else {
+            barUser = "Bar";
+            bazUser = "Baz";
+        }
+
+        private static final SurveyResponse barSurveyResponse = new SurveyResponse(
+            barUser,
+            barFeelings,
+            barText,
+            barZipcode,
+            barTimestamp
+        );
+        private static final SurveyResponse bazSurveyResponse = new SurveyResponse(
+            bazUser,
+            bazFeelings,
+            bazText,
+            bazZipcode,
+            bazTimestamp
+        );
+
+        private static final Map<String, SurveyResponse> expectedData = new HashMap<>();
+        expectedData.put("Foo", fooSurveyResponse);
+        expectedData.put("Bar", barSurveyResponse);
+        expectedData.put("Baz", bazSurveyResponse);
+
+        return expectedData;
+    }
+
+    private void loadTestData(DatastoreService ds, boolean sameUser) {
         Key fooKey = ds.newKeyFactory()
             .addAncestors(PathElement.of("User", "Foo"))
             .setKind("SurveyResponse")
@@ -119,8 +136,19 @@ public class SurveyServletTest {
             .set("UPSET", fooFeelings.get(PanasFeelings.UPSET).getValue()))
             .build();
 
+        private final String barUser;
+        private final String bazUser;
+
+        if (sameUser) {
+            barUser = "Foo";
+            bazUser = "Foo";
+        } else {
+            barUser = "Bar";
+            bazUser = "Baz";
+        }
+
         Key barKey = ds.newKeyFactory()
-            .addAncestors(PathElement.of("User", "Bar"))
+            .addAncestors(PathElement.of("User", barUser))
             .setKind("SurveyResponse")
             .newKey();
         Entity barEntity = Entity.newBuilder(barKey)
@@ -134,7 +162,7 @@ public class SurveyServletTest {
             .build();
 
         Key bazKey = ds.newKeyFactory()
-            .addAncestors(PathElement.of("User", "Baz"))
+            .addAncestors(PathElement.of("User", bazUser))
             .setKind("SurveyResponse")
             .newKey();
         Entity bazEntity = Entity.newBuilder(bazKey)
@@ -151,24 +179,57 @@ public class SurveyServletTest {
     @Test
     public void testQueryByFeelingSome() {
         DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-        loadQueryByFeelingTestData(ds);
-        Set<SurveyResponse> expected = Set.of(fooSurveyResponse, barSurveyResponse);
+        Map<String, SurveyResponse> expectedData = generateExpectedData(false);
+        loadTestData(ds, false);
+        Set<SurveyResponse> expected = Set.of(expectedData.get("Foo"), expectedData.get("Bar"));
         assertEquals(expected, SurveyServlet.queryByFeeling(PanasFeelings.JITTERY));
     }
 
     @Test
     public void testQueryByFeelingAll() {
         DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-        loadQueryByFeelingTestData(ds);
-        Set<SurveyResponse> expected = Set.of(fooSurveyResponse, barSurveyResponse, bazSurveyResponse);
+        Map<String, SurveyResponse> expectedData = generateExpectedData(false);
+        loadTestData(ds, false);
+        Set<SurveyResponse> expected = Set.of(
+            expectedData.get("Foo"), 
+            expectedData.get("Bar"), 
+            expectedData.get("Baz"));
         assertEquals(expected, SurveyServlet.queryByFeeling(PanasFeelings.ALERT));
     }
 
     @Test
     public void testQueryByFeelingNone() {
         DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-        loadQueryByFeelingTestData(ds);
+        loadTestData(ds, false);
         Set<SurveyResponse> expected = Set.of();
         assertEquals(expected, SurveyServlet.queryByFeeling(PanasFeelings.HOSTILE));
+    }
+
+    @Test
+    public void testQueryByUserSome() {
+        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+        Map<String, SurveyResponse> expectedData = generateExpectedData(false);
+        loadTestData(ds, false);
+        Set<SurveyResponse> expected = Set.of(expectedData.get("Bar"));
+        assertEquals(expected, SurveyServlet.queryByUser("Bar"));
+    }
+
+    @Test
+    public void testQueryByUserAll() {
+        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+        Map<String, SurveyResponse> expectedData = generateExpectedData(true);
+        loadTestData(ds, true);
+        Set<SurveyResponse> expected = Set.of(expectedData.get("Foo"));
+        Set<SurveyResponse> result = SurveyServlet.queryByUser("Foo");
+        assertEquals(expected, result);
+        assertEquals(3, result.size());
+    }
+
+    @Test
+    public void testQueryByUserNone() {
+        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+        loadTestData(ds, false);
+        Set<SurveyResponse> expected = Set.of();
+        assertEquals(expected, SurveyServlet.queryByUser("Peter"));
     }
 }
