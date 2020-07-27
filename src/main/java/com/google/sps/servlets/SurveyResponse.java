@@ -1,15 +1,21 @@
 package com.google.sps.servlets;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
-import java.util.HashSet;
-import java.util.ArrayList;
 
-// TODO add all the comments
+/** An immutable data type that represents PANAS survey responses.*/
 public class SurveyResponse {
 
+    /** 
+     * Create a SurveyResponse instance representing a single survey response submitted 
+     * by {@code user}, processed by the server at {@code timestamp} UNIX time, and containing 
+     * the message {@code text}, the zipcode {@code zipcode} (provided by the user), and the 
+     * feelings and respective intensities indicated on the survey as the map {@code feelings}. 
+     */
     public SurveyResponse(String user, 
         Map<PanasFeelings, PanasIntensity> feelings,
         String text,

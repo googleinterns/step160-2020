@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Class that handles survey data.*/
+/** Class that handles incoming and outgoing PANAS survey responses.*/
 public class SurveyServlet extends HttpServlet {
 
     @Override
