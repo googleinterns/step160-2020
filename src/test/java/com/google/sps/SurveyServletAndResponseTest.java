@@ -27,8 +27,13 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
-public class SurveyServletTest {
+/** 
+ * Tests for the SurveyServlet and SurveyResponse classes.
+ *
+ * Skeleton code for Datastore emulator from:
+ * https://stackoverflow.com/questions/40348653/google-datastore-emulator-using-java-not-using-gae
+ */
+public class SurveyServletAndResponseTest {
 
     protected static LocalDatastoreHelper localDatastoreHelper;
     protected Datastore datastore;
@@ -36,21 +41,20 @@ public class SurveyServletTest {
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException {
-        // create and start a local datastore emulator on a random free port
-        // this also means that you probably can run tests like this concurrently.
+        // Create and start a local datastore emulator on a random free port
         System.out.println("[Datastore-Emulator] start");
         localDatastoreHelper = LocalDatastoreHelper.create();
         localDatastoreHelper.start();
         System.out.println("[Datastore-Emulator] listening on port: " + localDatastoreHelper.getPort());
 
-        // set the system property to tell the gcloud lib to use the datastore emulator
+        // Set the system property to tell the gcloud lib to use the datastore emulator
         System.setProperty("DATASTORE_EMULATOR_HOST","localhost:" + localDatastoreHelper.getPort());
     }
 
     @Before
     public void setUp() {
-        // create the datastore instance
-        // because of the system property set it in setUpClass() this
+        // Create the datastore instance
+        // Because of the system property set it in setUpClass() this
         // datastore will be connected with the datastore emulator.
         datastore = DatastoreOptions.getDefaultInstance().getService();
         keyFactory = datastore.newKeyFactory().setKind("TestEntity");
@@ -59,29 +63,29 @@ public class SurveyServletTest {
     @After
     public void tearDown() throws IOException {
         System.out.println("[Datastore-Emulator] reset");
-        // this resets the datastore after every test
+        // This resets the datastore after every test
         localDatastoreHelper.reset();
     }
 
     @AfterClass
     public static void tearDownClass() throws InterruptedException, IOException, TimeoutException {
         System.out.println("[Datastore-Emulator] stop");
-        // this stops the datastore emulator after all tests are done
+        // This stops the datastore emulator after all tests are done
         localDatastoreHelper.stop();
     }
 
     @Test
     public void test1() {
-        // stores an entity in the datastore and retrieves it later
+        // Stores an entity in the datastore and retrieves it later
 
-        // create an Entity "TestEntity"
+        // Create an Entity "TestEntity"
         Entity.Builder builder = Entity.newBuilder(keyFactory.newKey(42));
         builder.set("name", "Test1");
 
-        // store it in datastore
+        // Store it in datastore
         datastore.put(builder.build());
 
-        // retrieve entity by key
+        // Retrieve entity by key
         Entity entity = datastore.get(keyFactory.newKey(42));
         assertNotNull(entity);
         assertEquals("Test1", entity.getString("name"));
@@ -89,16 +93,15 @@ public class SurveyServletTest {
 
     @Test
     public void test2() {
-        // try to access the entity created in test1, shouldn't work because
+        // Try to access the entity created in test1, shouldn't work because
         // of calling reset in tearDown() after each test.
 
-        // try to retrieve entity by key
+        // Try to retrieve entity by key
         Entity entity = datastore.get(keyFactory.newKey(42));
         assertNull(entity);
     }
 
     
-
     // Creating SurveyResponse instances to use in tests:
 
     private static final Map<PanasFeelings, PanasIntensity> fooFeelings = new HashMap<>();
@@ -130,6 +133,9 @@ public class SurveyServletTest {
     private static final long barTimestamp = 1595795898000L;
     private static final long bazTimestamp = 1595706828426L;
 
+    /**
+     * Builds SurveyResponse instances out of the test data.
+     */
     private Map<String, SurveyResponse> generateExpectedData(boolean sameUser) {
         
         final SurveyResponse fooSurveyResponse = new SurveyResponse(
@@ -174,6 +180,9 @@ public class SurveyServletTest {
         return expectedData;
     }
 
+    /**
+     * Loads Entities corresponding to the test data into the local datastore instance.
+     */
     private void loadTestData(boolean sameUser) {
         IncompleteKey fooIncompleteKey = datastore.newKeyFactory()
             .addAncestors(PathElement.of("User", "Foo"))
@@ -192,6 +201,7 @@ public class SurveyServletTest {
         final String barUser;
         final String bazUser;
 
+        // In case we want to test how a method acts when every username is the same:
         if (sameUser) {
             barUser = "Foo";
             bazUser = "Foo";
@@ -231,6 +241,9 @@ public class SurveyServletTest {
         datastore.add(fooEntity, barEntity, bazEntity);
     }
 
+
+    // SurveyServlet tests
+
     @Test
     public void testQueryByFeelingSome() {
         Map<String, SurveyResponse> expectedData = generateExpectedData(false);
@@ -260,7 +273,7 @@ public class SurveyServletTest {
     }
 
     @Test
-    public void testQueryByUserSome() { // TODO change to single
+    public void testQueryByUserSome() {
         Map<String, SurveyResponse> expectedData = generateExpectedData(false);
         loadTestData(false);
         Set<SurveyResponse> expected = new HashSet<>();
@@ -269,7 +282,7 @@ public class SurveyServletTest {
     }
 
     @Test
-    public void testQueryByUserAll() { // TODO change to multiple
+    public void testQueryByUserAll() {
         Map<String, SurveyResponse> expectedData = generateExpectedData(true);
         loadTestData(true);
         Set<SurveyResponse> expected = new HashSet<>();
@@ -317,6 +330,9 @@ public class SurveyServletTest {
         List<PanasFeelings> expected = new ArrayList<>();
         assertEquals(expected, SurveyServlet.queryMostIntense());
     }
+
+
+    // SurveyResponse tests
 
     @Test
     public void testGetUser() {
