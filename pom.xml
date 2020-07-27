@@ -36,39 +36,18 @@
       <version>1.9.59</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/com.google.appengine/appengine-api-labs -->
+    <!-- https://mvnrepository.com/artifact/com.google.cloud/google-cloud-datastore -->
     <dependency>
-      <groupId>com.google.appengine</groupId>
-      <artifactId>appengine-api-labs</artifactId>
-      <version>1.9.42</version>
+        <groupId>com.google.cloud</groupId>
+        <artifactId>google-cloud-datastore</artifactId>
+        <version>1.104.0</version>
     </dependency>
 
-
-    <!-- https://mvnrepository.com/artifact/com.google.appengine/appengine-api-stubs -->
     <dependency>
-      <groupId>com.google.appengine</groupId>
-      <artifactId>appengine-api-stubs</artifactId>
-      <version>1.9.76</version>
-      <scope>test</scope>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>3.4.4</version>
     </dependency>
-
-    <!-- https://mvnrepository.com/artifact/com.google.appengine/appengine-tools-sdk -->
-    <dependency>
-      <groupId>com.google.appengine</groupId>
-      <artifactId>appengine-tools-sdk</artifactId>
-      <version>1.9.44</version>
-    </dependency>
-
-
-    <!-- https://mvnrepository.com/artifact/com.google.appengine/appengine-testing -->
-    <dependency>
-      <groupId>com.google.appengine</groupId>
-      <artifactId>appengine-testing</artifactId>
-      <version>1.9.48</version>
-      <scope>test</scope>
-    </dependency>
-
-
 
     <dependency>
       <groupId>junit</groupId>
