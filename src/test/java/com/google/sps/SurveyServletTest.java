@@ -1,73 +1,122 @@
+package com.google.sps.servlets;
 
-import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
 import static org.junit.Assert.assertEquals;
-imoprt static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
-import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.DatastoreOptions;
+import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.IncompleteKey;
+import com.google.cloud.datastore.Key;
+import com.google.cloud.datastore.KeyFactory;
+import com.google.cloud.datastore.PathElement;
+import com.google.cloud.datastore.testing.LocalDatastoreHelper;
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
 
 public class SurveyServletTest {
 
-    private final LocalServiceTestHelper helper =
-        new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
+    protected static LocalDatastoreHelper localDatastoreHelper;
+    protected Datastore datastore;
+    protected KeyFactory keyFactory;
+
+    @BeforeClass
+    public static void setUpClass() throws InterruptedException, IOException {
+        // create and start a local datastore emulator on a random free port
+        // this also means that you probably can run tests like this concurrently.
+        System.out.println("[Datastore-Emulator] start");
+        localDatastoreHelper = LocalDatastoreHelper.create();
+        localDatastoreHelper.start();
+        System.out.println("[Datastore-Emulator] listening on port: " + localDatastoreHelper.getPort());
+
+        // set the system property to tell the gcloud lib to use the datastore emulator
+        System.setProperty("DATASTORE_EMULATOR_HOST","localhost:" + localDatastoreHelper.getPort());
+    }
 
     @Before
     public void setUp() {
-        helper.setUp();
+        // create the datastore instance
+        // because of the system property set it in setUpClass() this
+        // datastore will be connected with the datastore emulator.
+        datastore = DatastoreOptions.getDefaultInstance().getService();
+        keyFactory = datastore.newKeyFactory().setKind("TestEntity");
     }
 
     @After
-    public void tearDown() {
-        helper.tearDown();
+    public void tearDown() throws IOException {
+        System.out.println("[Datastore-Emulator] reset");
+        // this resets the datastore after every test
+        localDatastoreHelper.reset();
     }
 
-    // Run this test twice to prove we're not leaking any state across tests.
-    private void doTest() {
-        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-        assertEquals(0, ds.prepare(new Query("yam")).countEntities(withLimit(10)));
-        ds.put(new Entity("yam"));
-        ds.put(new Entity("yam"));
-        assertEquals(2, ds.prepare(new Query("yam")).countEntities(withLimit(10)));
-    }
-
-    @Test
-    public void testInsert1() {
-        doTest();
+    @AfterClass
+    public static void tearDownClass() throws InterruptedException, IOException, TimeoutException {
+        System.out.println("[Datastore-Emulator] stop");
+        // this stops the datastore emulator after all tests are done
+        localDatastoreHelper.stop();
     }
 
     @Test
-    public void testInsert2() {
-        doTest();
+    public void test1() {
+        // stores an entity in the datastore and retrieves it later
+
+        // create an Entity "TestEntity"
+        Entity.Builder builder = Entity.newBuilder(keyFactory.newKey(42));
+        builder.set("name", "Test1");
+
+        // store it in datastore
+        datastore.put(builder.build());
+
+        // retrieve entity by key
+        Entity entity = datastore.get(keyFactory.newKey(42));
+        assertNotNull(entity);
+        assertEquals("Test1", entity.getString("name"));
     }
 
+    @Test
+    public void test2() {
+        // try to access the entity created in test1, shouldn't work because
+        // of calling reset in tearDown() after each test.
+
+        // try to retrieve entity by key
+        Entity entity = datastore.get(keyFactory.newKey(42));
+        assertNull(entity);
+    }
+
+    
 
     // Creating SurveyResponse instances to use in tests:
 
     private static final Map<PanasFeelings, PanasIntensity> fooFeelings = new HashMap<>();
-    fooFeelings.put(PanasFeelings.JITTERY, PanasIntensity.EXTREMELY);
-    fooFeelings.put(PanasFeelings.ALERT, PanasIntensity.QUITE_A_BIT);
-    fooFeelings.put(PanasFeelings.UPSET, PanasIntensity.QUITE_A_BIT);
-
     private static final Map<PanasFeelings, PanasIntensity> barFeelings = new HashMap<>();
-    barFeelings.put(PanasFeelings.JITTERY, PanasIntensity.EXTREMELY);
-    barFeelings.put(PanasFeelings.ALERT, PanasIntensity.EXTREMELY);
-    barFeelings.put(PanasFeelings.AFRAID, PanasIntensity.QUITE_A_BIT);
-    barFeelings.put(PanasFeelings.NERVOUS, PanasIntensity.QUITE_A_BIT);
-
     private static final Map<PanasFeelings, PanasIntensity> bazFeelings = new HashMap<>();
-    bazFeelings.put(PanasFeelings.ALERT, PanasIntensity.QUITE_A_BIT);
-    bazFeelings.put(PanasFeelings.PROUD, PanasIntensity.QUITE_A_BIT);
+
+    @BeforeClass
+    public static void buildFeelingMaps() {
+        fooFeelings.put(PanasFeelings.JITTERY, PanasIntensity.EXTREMELY);
+        fooFeelings.put(PanasFeelings.ALERT, PanasIntensity.QUITE_A_BIT);
+        fooFeelings.put(PanasFeelings.UPSET, PanasIntensity.QUITE_A_BIT);
+        barFeelings.put(PanasFeelings.JITTERY, PanasIntensity.EXTREMELY);
+        barFeelings.put(PanasFeelings.ALERT, PanasIntensity.EXTREMELY);
+        barFeelings.put(PanasFeelings.AFRAID, PanasIntensity.QUITE_A_BIT);
+        barFeelings.put(PanasFeelings.NERVOUS, PanasIntensity.QUITE_A_BIT);
+        bazFeelings.put(PanasFeelings.ALERT, PanasIntensity.QUITE_A_BIT);
+        bazFeelings.put(PanasFeelings.PROUD, PanasIntensity.QUITE_A_BIT);
+    }
 
     private static final String fooText = "I feel many things";
     private static final String barText = "COVID is making me sad";
@@ -77,12 +126,13 @@ public class SurveyServletTest {
     private static final String barZipcode = "33442";
     private static final String bazZipcode = "90210";
 
-    private static final long fooTimestamp = 1595706791802;
-    private static final long barTimestamp = 1595795898000;
-    private static final long bazTimestamp = 1595706828426;
+    private static final long fooTimestamp = 1595706791802L;
+    private static final long barTimestamp = 1595795898000L;
+    private static final long bazTimestamp = 1595706828426L;
 
     private Map<String, SurveyResponse> generateExpectedData(boolean sameUser) {
-        private static final SurveyResponse fooSurveyResponse = new SurveyResponse(
+        
+        final SurveyResponse fooSurveyResponse = new SurveyResponse(
             "Foo",
             fooFeelings,
             fooText,
@@ -90,8 +140,8 @@ public class SurveyServletTest {
             fooTimestamp
         );
 
-        private final String barUser;
-        private final String bazUser;
+        final String barUser;
+        final String bazUser;
 
         if (sameUser) {
             barUser = "Foo";
@@ -101,14 +151,14 @@ public class SurveyServletTest {
             bazUser = "Baz";
         }
 
-        private static final SurveyResponse barSurveyResponse = new SurveyResponse(
+        final SurveyResponse barSurveyResponse = new SurveyResponse(
             barUser,
             barFeelings,
             barText,
             barZipcode,
             barTimestamp
         );
-        private static final SurveyResponse bazSurveyResponse = new SurveyResponse(
+        final SurveyResponse bazSurveyResponse = new SurveyResponse(
             bazUser,
             bazFeelings,
             bazText,
@@ -116,7 +166,7 @@ public class SurveyServletTest {
             bazTimestamp
         );
 
-        private static final Map<String, SurveyResponse> expectedData = new HashMap<>();
+        final Map<String, SurveyResponse> expectedData = new HashMap<>();
         expectedData.put("Foo", fooSurveyResponse);
         expectedData.put("Bar", barSurveyResponse);
         expectedData.put("Baz", bazSurveyResponse);
@@ -124,22 +174,23 @@ public class SurveyServletTest {
         return expectedData;
     }
 
-    private void loadTestData(DatastoreService ds, boolean sameUser) {
-        Key fooKey = ds.newKeyFactory()
+    private void loadTestData(boolean sameUser) {
+        IncompleteKey fooIncompleteKey = datastore.newKeyFactory()
             .addAncestors(PathElement.of("User", "Foo"))
             .setKind("SurveyResponse")
             .newKey();
+        Key fooKey = datastore.allocateId(fooIncompleteKey);
         Entity fooEntity = Entity.newBuilder(fooKey)
             .set("timestamp", fooTimestamp)
             .set("zipcode", fooZipcode)
             .set("text", fooText)
-            .set("JITTERY", fooFeelings.get(PanasFeelings.JITTERY).getValue());
-            .set("ALERT", fooFeelings.get(PanasFeelings.ALERT).getValue()))
-            .set("UPSET", fooFeelings.get(PanasFeelings.UPSET).getValue()))
+            .set("JITTERY", fooFeelings.get(PanasFeelings.JITTERY).getValue())
+            .set("ALERT", fooFeelings.get(PanasFeelings.ALERT).getValue())
+            .set("UPSET", fooFeelings.get(PanasFeelings.UPSET).getValue())
             .build();
 
-        private final String barUser;
-        private final String bazUser;
+        final String barUser;
+        final String bazUser;
 
         if (sameUser) {
             barUser = "Foo";
@@ -149,10 +200,11 @@ public class SurveyServletTest {
             bazUser = "Baz";
         }
 
-        Key barKey = ds.newKeyFactory()
+        IncompleteKey barIncompleteKey = datastore.newKeyFactory()
             .addAncestors(PathElement.of("User", barUser))
             .setKind("SurveyResponse")
             .newKey();
+        Key barKey = datastore.allocateId(barIncompleteKey);
         Entity barEntity = Entity.newBuilder(barKey)
             .set("timestamp", barTimestamp)
             .set("zipcode", barZipcode)
@@ -163,65 +215,65 @@ public class SurveyServletTest {
             .set("NERVOUS", barFeelings.get(PanasFeelings.NERVOUS).getValue())
             .build();
 
-        Key bazKey = ds.newKeyFactory()
+        IncompleteKey bazIncompleteKey = datastore.newKeyFactory()
             .addAncestors(PathElement.of("User", bazUser))
             .setKind("SurveyResponse")
             .newKey();
+        Key bazKey = datastore.allocateId(bazIncompleteKey);
         Entity bazEntity = Entity.newBuilder(bazKey)
             .set("timestamp", bazTimestamp)
-            .set("zipcode", bazZipcode
+            .set("zipcode", bazZipcode)
             .set("text", bazText)
             .set("ALERT", bazFeelings.get(PanasFeelings.ALERT).getValue())
             .set("PROUD", bazFeelings.get(PanasFeelings.PROUD).getValue())
             .build();
 
-        ds.add(fooEntity, barEntity, bazEntity);
+        datastore.add(fooEntity, barEntity, bazEntity);
     }
 
     @Test
     public void testQueryByFeelingSome() {
-        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
         Map<String, SurveyResponse> expectedData = generateExpectedData(false);
-        loadTestData(ds, false);
-        Set<SurveyResponse> expected = Set.of(expectedData.get("Foo"), expectedData.get("Bar"));
+        loadTestData(false);
+        Set<SurveyResponse> expected = new HashSet<>();
+        expected.add(expectedData.get("Foo"));
+        expected.add(expectedData.get("Bar"));
         assertEquals(expected, SurveyServlet.queryByFeeling(PanasFeelings.JITTERY));
     }
 
     @Test
     public void testQueryByFeelingAll() {
-        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
         Map<String, SurveyResponse> expectedData = generateExpectedData(false);
-        loadTestData(ds, false);
-        Set<SurveyResponse> expected = Set.of(
-            expectedData.get("Foo"), 
-            expectedData.get("Bar"), 
-            expectedData.get("Baz"));
+        loadTestData(false);
+        Set<SurveyResponse> expected = new HashSet<>();
+        expected.add(expectedData.get("Foo"));
+        expected.add(expectedData.get("Bar"));
+        expected.add(expectedData.get("Baz"));
         assertEquals(expected, SurveyServlet.queryByFeeling(PanasFeelings.ALERT));
     }
 
     @Test
     public void testQueryByFeelingNone() {
-        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-        loadTestData(ds, false);
-        Set<SurveyResponse> expected = Set.of();
+        loadTestData(false);
+        Set<SurveyResponse> expected = new HashSet<>();
         assertEquals(expected, SurveyServlet.queryByFeeling(PanasFeelings.HOSTILE));
     }
 
     @Test
-    public void testQueryByUserSome() {
-        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    public void testQueryByUserSome() { // TODO change to single
         Map<String, SurveyResponse> expectedData = generateExpectedData(false);
-        loadTestData(ds, false);
-        Set<SurveyResponse> expected = Set.of(expectedData.get("Bar"));
+        loadTestData(false);
+        Set<SurveyResponse> expected = new HashSet<>();
+        expected.add(expectedData.get("Bar"));
         assertEquals(expected, SurveyServlet.queryByUser("Bar"));
     }
 
     @Test
-    public void testQueryByUserAll() {
-        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    public void testQueryByUserAll() { // TODO change to multiple
         Map<String, SurveyResponse> expectedData = generateExpectedData(true);
-        loadTestData(ds, true);
-        Set<SurveyResponse> expected = Set.of(expectedData.get("Foo"));
+        loadTestData(true);
+        Set<SurveyResponse> expected = new HashSet<>();
+        expected.add(expectedData.get("Foo"));
         Set<SurveyResponse> result = SurveyServlet.queryByUser("Foo");
         assertEquals(expected, result);
         assertEquals(3, result.size());
@@ -229,45 +281,40 @@ public class SurveyServletTest {
 
     @Test
     public void testQueryByUserNone() {
-        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-        loadTestData(ds, false);
-        Set<SurveyResponse> expected = Set.of();
+        loadTestData(false);
+        Set<SurveyResponse> expected = new HashSet<>();
         assertEquals(expected, SurveyServlet.queryByUser("Peter"));
     }
 
     @Test
     public void testQueryMostWidespread() {
-        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-        loadTestData(ds, false);
-        List<PanasFeelings> expected = List.of(
-            PanasFeelings.ALERT,
-            PanasFeelings.JITTERY,
-            PanasFeelings.AFRAID);
+        loadTestData(false);
+        List<PanasFeelings> expected = new ArrayList<>();
+        expected.add(PanasFeelings.ALERT);
+        expected.add(PanasFeelings.JITTERY);
+        expected.add(PanasFeelings.AFRAID);
         assertEquals(expected, SurveyServlet.queryMostWidespread());
     }
 
     @Test
     public void testQueryMostWidespreadEmpty() {
-        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-        List<PanasFeelings> expected = List.of();
+        List<PanasFeelings> expected = new ArrayList<>();
         assertEquals(expected, SurveyServlet.queryMostWidespread());
     }
 
     @Test
     public void testQueryMostIntense() {
-        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-        loadTestData(ds, false);
-        List<PanasFeelings> expected = List.of(
-            PanasFeelings.JITTERY,
-            PanasFeelings.ALERT,
-            PanasFeelings.AFRAID);
+        loadTestData(false);
+        List<PanasFeelings> expected = new ArrayList<>();
+        expected.add(PanasFeelings.JITTERY);
+        expected.add(PanasFeelings.ALERT);
+        expected.add(PanasFeelings.AFRAID);
         assertEquals(expected, SurveyServlet.queryMostIntense());
     }
 
     @Test
     public void testQueryMostInteseEmpty() {
-        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-        List<PanasFeelings> expected = List.of();
+        List<PanasFeelings> expected = new ArrayList<>();
         assertEquals(expected, SurveyServlet.queryMostIntense());
     }
 
@@ -286,8 +333,9 @@ public class SurveyServletTest {
         assertEquals(barFeelings, expectedData.get("Bar").getFeelings());
         assertEquals(bazFeelings, expectedData.get("Baz").getFeelings());
         Map<PanasFeelings, PanasIntensity> immutableMap = expectedData.get("Foo").getFeelings();
-        assertThrows(UnsupportedOperationException.class, 
-            immutableMap.put(PanasFeelings.PROUD, PanasIntensity.QUITE_A_BIT));
+        assertThrows(UnsupportedOperationException.class, () -> {
+            immutableMap.put(PanasFeelings.PROUD, PanasIntensity.QUITE_A_BIT);
+        });
     }
 
     @Test

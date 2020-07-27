@@ -1,2 +1,4 @@
-PanasIntensity.class
-PanasFeelings.class
+com/google/sps/servlets/SurveyServlet.class
+com/google/sps/servlets/SurveyResponse.class
+com/google/sps/servlets/PanasIntensity.class
+com/google/sps/servlets/PanasFeelings.class

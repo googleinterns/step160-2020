@@ -1,1 +1,2 @@
-SurveyServletTest.class
+com/google/sps/servlets/SurveyServletTest.class
+com/google/sps/servlets/DatastoreEmulatorTest.class

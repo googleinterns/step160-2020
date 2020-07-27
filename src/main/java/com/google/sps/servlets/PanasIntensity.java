@@ -1,3 +1,5 @@
+package com.google.sps.servlets;
+
 public enum PanasIntensity {
     NOT_AT_ALL(0),
     VERY_SLIGHTLY(1),
