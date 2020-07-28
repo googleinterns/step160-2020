@@ -16,15 +16,17 @@ abstract class SurveyResponse {
     /** 
      * Create a SurveyResponse instance representing a single survey response submitted 
      * by {@code user}, processed by the server at {@code timestamp} UNIX time, and containing 
-     * the message {@code text}, the zipcode {@code zipcode} (provided by the user), and the 
-     * feelings and respective intensities indicated on the survey as the map {@code feelings}. 
+     * the message {@code text}, the city {@code city} and state {@code state} (provided by the 
+     * user), and the feelings and respective intensities indicated on the survey as the 
+     * map {@code feelings}.
      */
     static SurveyResponse create(String user, 
         ImmutableMap<PanasFeelings, PanasIntensity> feelings,
         String text,
-        String zipcode,
+        String city,
+        String state,
         long timestamp) {
-        return new AutoValue_SurveyResponse(user, feelings, text, zipcode, timestamp);
+        return new AutoValue_SurveyResponse(user, feelings, text, city, state, timestamp);
     }
 
     /** Returns the username included in the survey response.*/
@@ -39,8 +41,11 @@ abstract class SurveyResponse {
     /** Returns the text included in the survey response.*/
     abstract String text();
 
-    /** Returns the zipcode included in the survey response as a String.*/
-    abstract String zipcode();
+    /** Returns the city named in the survey response.*/
+    abstract String city();
+
+    /** Returns the state named in the survey response.*/
+    abstract String state();
 
     /**
     * Returns the timestamp at which the survey response was processed by the server, in 

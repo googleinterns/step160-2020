@@ -137,9 +137,13 @@ public class SurveyServletAndResponseTest {
     private static final String barText = "COVID is making me sad";
     private static final String bazText = "I'm a movie star";
 
-    private static final String fooZipcode = "02142";
-    private static final String barZipcode = "33442";
-    private static final String bazZipcode = "90210";
+    private static final String fooCity = "Cambridge";
+    private static final String barCity = "Deerfield Beach";
+    private static final String bazCity = "Beverly Hills";
+
+    private static final String fooState = "MA";
+    private static final String barState = "FL";
+    private static final String bazState = "CA";
 
     private static final long fooTimestamp = 1595706791802L;
     private static final long barTimestamp = 1595795898000L;
@@ -154,7 +158,8 @@ public class SurveyServletAndResponseTest {
             "Foo",
             fooFeelings,
             fooText,
-            fooZipcode,
+            fooCity,
+            fooState,
             fooTimestamp
         );
 
@@ -173,14 +178,16 @@ public class SurveyServletAndResponseTest {
             barUser,
             barFeelings,
             barText,
-            barZipcode,
+            barCity,
+            barState,
             barTimestamp
         );
         final SurveyResponse bazSurveyResponse = SurveyResponse.create(
             bazUser,
             bazFeelings,
             bazText,
-            bazZipcode,
+            bazCity,
+            bazState,
             bazTimestamp
         );
 
@@ -204,7 +211,8 @@ public class SurveyServletAndResponseTest {
         Key fooKey = datastore.allocateId(fooIncompleteKey);
         Entity fooEntity = Entity.newBuilder(fooKey)
             .set("timestamp", fooTimestamp)
-            .set("zipcode", fooZipcode)
+            .set("city", fooCity)
+            .set("state", fooState)
             .set("text", fooText)
             .set("JITTERY", fooFeelings.get(PanasFeelings.JITTERY).getValue())
             .set("ALERT", fooFeelings.get(PanasFeelings.ALERT).getValue())
@@ -231,7 +239,8 @@ public class SurveyServletAndResponseTest {
         Key barKey = datastore.allocateId(barIncompleteKey);
         Entity barEntity = Entity.newBuilder(barKey)
             .set("timestamp", barTimestamp)
-            .set("zipcode", barZipcode)
+            .set("city", barCity)
+            .set("state", barState)
             .set("text", barText)
             .set("JITTERY", barFeelings.get(PanasFeelings.JITTERY).getValue())
             .set("ALERT", barFeelings.get(PanasFeelings.ALERT).getValue())
@@ -247,7 +256,8 @@ public class SurveyServletAndResponseTest {
         Key bazKey = datastore.allocateId(bazIncompleteKey);
         Entity bazEntity = Entity.newBuilder(bazKey)
             .set("timestamp", bazTimestamp)
-            .set("zipcode", bazZipcode)
+            .set("city", bazCity)
+            .set("state", bazState)
             .set("text", bazText)
             .set("ALERT", bazFeelings.get(PanasFeelings.ALERT).getValue())
             .set("PROUD", bazFeelings.get(PanasFeelings.PROUD).getValue())
@@ -378,11 +388,19 @@ public class SurveyServletAndResponseTest {
     }
 
     @Test
-    public void testZipcode() {
+    public void testCity() {
         Map<String, SurveyResponse> expectedData = generateExpectedData(false);
-        assertEquals(fooZipcode, expectedData.get("Foo").zipcode());
-        assertEquals(barZipcode, expectedData.get("Bar").zipcode());
-        assertEquals(bazZipcode, expectedData.get("Baz").zipcode());
+        assertEquals(fooCity, expectedData.get("Foo").city());
+        assertEquals(barCity, expectedData.get("Bar").city());
+        assertEquals(bazCity, expectedData.get("Baz").city());
+    }
+
+    @Test
+    public void testState() {
+        Map<String, SurveyResponse> expectedData = generateExpectedData(false);
+        assertEquals(fooState, expectedData.get("Foo").state());
+        assertEquals(barState, expectedData.get("Bar").state());
+        assertEquals(bazState, expectedData.get("Baz").state());
     }
 
     @Test
