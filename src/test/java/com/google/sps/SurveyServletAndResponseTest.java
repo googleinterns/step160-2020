@@ -13,6 +13,7 @@ import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.PathElement;
 import com.google.cloud.datastore.testing.LocalDatastoreHelper;
+import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 import java.util.ArrayList;
@@ -29,6 +30,9 @@ import org.junit.Test;
 
 /** 
  * Tests for the SurveyServlet and SurveyResponse classes.
+ *
+ * Make sure to set the project you're working on in your shell with:
+ * gcloud config set project [PROJECT_NAME]
  *
  * Skeleton code for Datastore emulator from:
  * https://stackoverflow.com/questions/40348653/google-datastore-emulator-using-java-not-using-gae
@@ -57,7 +61,7 @@ public class SurveyServletAndResponseTest {
         // Because of the system property set it in setUpClass() this
         // datastore will be connected with the datastore emulator.
         datastore = DatastoreOptions.getDefaultInstance().getService();
-        keyFactory = datastore.newKeyFactory().setKind("TestEntity");
+        keyFactory = datastore.newKeyFactory().setProjectId("manage-at-scale-step-2020").setKind("TestEntity");
     }
 
     @After
@@ -104,21 +108,29 @@ public class SurveyServletAndResponseTest {
     
     // Creating SurveyResponse instances to use in tests:
 
-    private static final Map<PanasFeelings, PanasIntensity> fooFeelings = new HashMap<>();
-    private static final Map<PanasFeelings, PanasIntensity> barFeelings = new HashMap<>();
-    private static final Map<PanasFeelings, PanasIntensity> bazFeelings = new HashMap<>();
+    private static ImmutableMap<PanasFeelings, PanasIntensity> fooFeelings;
+    private static ImmutableMap<PanasFeelings, PanasIntensity> barFeelings;
+    private static ImmutableMap<PanasFeelings, PanasIntensity> bazFeelings;
 
     @BeforeClass
     public static void buildFeelingMaps() {
-        fooFeelings.put(PanasFeelings.JITTERY, PanasIntensity.EXTREMELY);
-        fooFeelings.put(PanasFeelings.ALERT, PanasIntensity.QUITE_A_BIT);
-        fooFeelings.put(PanasFeelings.UPSET, PanasIntensity.QUITE_A_BIT);
-        barFeelings.put(PanasFeelings.JITTERY, PanasIntensity.EXTREMELY);
-        barFeelings.put(PanasFeelings.ALERT, PanasIntensity.EXTREMELY);
-        barFeelings.put(PanasFeelings.AFRAID, PanasIntensity.QUITE_A_BIT);
-        barFeelings.put(PanasFeelings.NERVOUS, PanasIntensity.QUITE_A_BIT);
-        bazFeelings.put(PanasFeelings.ALERT, PanasIntensity.QUITE_A_BIT);
-        bazFeelings.put(PanasFeelings.PROUD, PanasIntensity.QUITE_A_BIT);
+        final Map<PanasFeelings, PanasIntensity> fooMutableFeelings = new HashMap<>();
+        final Map<PanasFeelings, PanasIntensity> barMutableFeelings = new HashMap<>();
+        final Map<PanasFeelings, PanasIntensity> bazMutableFeelings = new HashMap<>();
+
+        fooMutableFeelings.put(PanasFeelings.JITTERY, PanasIntensity.EXTREMELY);
+        fooMutableFeelings.put(PanasFeelings.ALERT, PanasIntensity.QUITE_A_BIT);
+        fooMutableFeelings.put(PanasFeelings.UPSET, PanasIntensity.QUITE_A_BIT);
+        barMutableFeelings.put(PanasFeelings.JITTERY, PanasIntensity.EXTREMELY);
+        barMutableFeelings.put(PanasFeelings.ALERT, PanasIntensity.EXTREMELY);
+        barMutableFeelings.put(PanasFeelings.AFRAID, PanasIntensity.QUITE_A_BIT);
+        barMutableFeelings.put(PanasFeelings.NERVOUS, PanasIntensity.QUITE_A_BIT);
+        bazMutableFeelings.put(PanasFeelings.ALERT, PanasIntensity.QUITE_A_BIT);
+        bazMutableFeelings.put(PanasFeelings.PROUD, PanasIntensity.QUITE_A_BIT);
+
+        fooFeelings = ImmutableMap.copyOf(fooMutableFeelings); 
+        barFeelings = ImmutableMap.copyOf(barMutableFeelings); 
+        bazFeelings = ImmutableMap.copyOf(bazMutableFeelings);
     }
 
     private static final String fooText = "I feel many things";
@@ -138,7 +150,7 @@ public class SurveyServletAndResponseTest {
      */
     private Map<String, SurveyResponse> generateExpectedData(boolean sameUser) {
         
-        final SurveyResponse fooSurveyResponse = new SurveyResponse(
+        final SurveyResponse fooSurveyResponse = SurveyResponse.create(
             "Foo",
             fooFeelings,
             fooText,
@@ -157,14 +169,14 @@ public class SurveyServletAndResponseTest {
             bazUser = "Baz";
         }
 
-        final SurveyResponse barSurveyResponse = new SurveyResponse(
+        final SurveyResponse barSurveyResponse = SurveyResponse.create(
             barUser,
             barFeelings,
             barText,
             barZipcode,
             barTimestamp
         );
-        final SurveyResponse bazSurveyResponse = new SurveyResponse(
+        final SurveyResponse bazSurveyResponse = SurveyResponse.create(
             bazUser,
             bazFeelings,
             bazText,
@@ -187,6 +199,7 @@ public class SurveyServletAndResponseTest {
         IncompleteKey fooIncompleteKey = datastore.newKeyFactory()
             .addAncestors(PathElement.of("User", "Foo"))
             .setKind("SurveyResponse")
+            .setProjectId("manage-at-scale-step-2020")
             .newKey();
         Key fooKey = datastore.allocateId(fooIncompleteKey);
         Entity fooEntity = Entity.newBuilder(fooKey)
@@ -213,6 +226,7 @@ public class SurveyServletAndResponseTest {
         IncompleteKey barIncompleteKey = datastore.newKeyFactory()
             .addAncestors(PathElement.of("User", barUser))
             .setKind("SurveyResponse")
+            .setProjectId("manage-at-scale-step-2020")
             .newKey();
         Key barKey = datastore.allocateId(barIncompleteKey);
         Entity barEntity = Entity.newBuilder(barKey)
@@ -228,6 +242,7 @@ public class SurveyServletAndResponseTest {
         IncompleteKey bazIncompleteKey = datastore.newKeyFactory()
             .addAncestors(PathElement.of("User", bazUser))
             .setKind("SurveyResponse")
+            .setProjectId("manage-at-scale-step-2020")
             .newKey();
         Key bazKey = datastore.allocateId(bazIncompleteKey);
         Entity bazEntity = Entity.newBuilder(bazKey)
@@ -335,46 +350,46 @@ public class SurveyServletAndResponseTest {
     // SurveyResponse tests
 
     @Test
-    public void testGetUser() {
+    public void testUser() {
         Map<String, SurveyResponse> expectedData = generateExpectedData(false);
-        assertEquals("Foo", expectedData.get("Foo").getUser());
-        assertEquals("Bar", expectedData.get("Bar").getUser());
-        assertEquals("Baz", expectedData.get("Baz").getUser());
+        assertEquals("Foo", expectedData.get("Foo").user());
+        assertEquals("Bar", expectedData.get("Bar").user());
+        assertEquals("Baz", expectedData.get("Baz").user());
     }
 
     @Test
-    public void testGetFeelings() {
+    public void testFeelings() {
         Map<String, SurveyResponse> expectedData = generateExpectedData(false);
-        assertEquals(fooFeelings, expectedData.get("Foo").getFeelings());
-        assertEquals(barFeelings, expectedData.get("Bar").getFeelings());
-        assertEquals(bazFeelings, expectedData.get("Baz").getFeelings());
-        Map<PanasFeelings, PanasIntensity> immutableMap = expectedData.get("Foo").getFeelings();
+        assertEquals(fooFeelings, expectedData.get("Foo").feelings());
+        assertEquals(barFeelings, expectedData.get("Bar").feelings());
+        assertEquals(bazFeelings, expectedData.get("Baz").feelings());
+        Map<PanasFeelings, PanasIntensity> immutableMap = expectedData.get("Foo").feelings();
         assertThrows(UnsupportedOperationException.class, () -> {
             immutableMap.put(PanasFeelings.PROUD, PanasIntensity.QUITE_A_BIT);
         });
     }
 
     @Test
-    public void testGetText() {
+    public void testText() {
         Map<String, SurveyResponse> expectedData = generateExpectedData(false);
-        assertEquals(fooText, expectedData.get("Foo").getText());
-        assertEquals(barText, expectedData.get("Bar").getText());
-        assertEquals(bazText, expectedData.get("Baz").getText());
+        assertEquals(fooText, expectedData.get("Foo").text());
+        assertEquals(barText, expectedData.get("Bar").text());
+        assertEquals(bazText, expectedData.get("Baz").text());
     }
 
     @Test
-    public void testGetZipcode() {
+    public void testZipcode() {
         Map<String, SurveyResponse> expectedData = generateExpectedData(false);
-        assertEquals(fooZipcode, expectedData.get("Foo").getZipcode());
-        assertEquals(barZipcode, expectedData.get("Bar").getZipcode());
-        assertEquals(bazZipcode, expectedData.get("Baz").getZipcode());
+        assertEquals(fooZipcode, expectedData.get("Foo").zipcode());
+        assertEquals(barZipcode, expectedData.get("Bar").zipcode());
+        assertEquals(bazZipcode, expectedData.get("Baz").zipcode());
     }
 
     @Test
-    public void testGetTimestamp() {
+    public void testTimestamp() {
         Map<String, SurveyResponse> expectedData = generateExpectedData(false);
-        assertEquals(fooTimestamp, expectedData.get("Foo").getTimestamp());
-        assertEquals(barTimestamp, expectedData.get("Bar").getTimestamp());
-        assertEquals(bazTimestamp, expectedData.get("Baz").getTimestamp());
+        assertEquals(fooTimestamp, expectedData.get("Foo").timestamp());
+        assertEquals(barTimestamp, expectedData.get("Bar").timestamp());
+        assertEquals(bazTimestamp, expectedData.get("Baz").timestamp());
     }
 }

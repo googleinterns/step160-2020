@@ -1,6 +1,7 @@
 package com.google.sps.servlets;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,7 +20,7 @@ abstract class SurveyResponse {
      * feelings and respective intensities indicated on the survey as the map {@code feelings}. 
      */
     static SurveyResponse create(String user, 
-        Map<PanasFeelings, PanasIntensity> feelings,
+        ImmutableMap<PanasFeelings, PanasIntensity> feelings,
         String text,
         String zipcode,
         long timestamp) {
@@ -33,7 +34,7 @@ abstract class SurveyResponse {
     * Returns an immutable map representing the feelings (and their intensities) included 
     * in the survey response.
     */
-    abstract Map<PanasFeelings, PanasIntensity> feelings();
+    abstract ImmutableMap<PanasFeelings, PanasIntensity> feelings();
 
     /** Returns the text included in the survey response.*/
     abstract String text();
