@@ -20,7 +20,8 @@ abstract class SurveyResponse {
      * user), and the feelings and respective intensities indicated on the survey as the 
      * map {@code feelings}.
      */
-    static SurveyResponse create(String user, 
+    static SurveyResponse create(
+        String user, 
         ImmutableMap<PanasFeelings, PanasIntensity> feelings,
         String text,
         String city,

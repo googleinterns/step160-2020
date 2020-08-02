@@ -214,9 +214,9 @@ public class SurveyServletAndResponseTest {
             .set("city", fooCity)
             .set("state", fooState)
             .set("text", fooText)
-            .set("JITTERY", fooFeelings.get(PanasFeelings.JITTERY).getValue())
-            .set("ALERT", fooFeelings.get(PanasFeelings.ALERT).getValue())
-            .set("UPSET", fooFeelings.get(PanasFeelings.UPSET).getValue())
+            .set("JITTERY", fooFeelings.get(PanasFeelings.JITTERY).ordinal())
+            .set("ALERT", fooFeelings.get(PanasFeelings.ALERT).ordinal())
+            .set("UPSET", fooFeelings.get(PanasFeelings.UPSET).ordinal())
             .build();
 
         final String barUser;
@@ -242,10 +242,10 @@ public class SurveyServletAndResponseTest {
             .set("city", barCity)
             .set("state", barState)
             .set("text", barText)
-            .set("JITTERY", barFeelings.get(PanasFeelings.JITTERY).getValue())
-            .set("ALERT", barFeelings.get(PanasFeelings.ALERT).getValue())
-            .set("AFRAID", barFeelings.get(PanasFeelings.AFRAID).getValue())
-            .set("NERVOUS", barFeelings.get(PanasFeelings.NERVOUS).getValue())
+            .set("JITTERY", barFeelings.get(PanasFeelings.JITTERY).ordinal())
+            .set("ALERT", barFeelings.get(PanasFeelings.ALERT).ordinal())
+            .set("AFRAID", barFeelings.get(PanasFeelings.AFRAID).ordinal())
+            .set("NERVOUS", barFeelings.get(PanasFeelings.NERVOUS).ordinal())
             .build();
 
         IncompleteKey bazIncompleteKey = datastore.newKeyFactory()
@@ -259,8 +259,8 @@ public class SurveyServletAndResponseTest {
             .set("city", bazCity)
             .set("state", bazState)
             .set("text", bazText)
-            .set("ALERT", bazFeelings.get(PanasFeelings.ALERT).getValue())
-            .set("PROUD", bazFeelings.get(PanasFeelings.PROUD).getValue())
+            .set("ALERT", bazFeelings.get(PanasFeelings.ALERT).ordinal())
+            .set("PROUD", bazFeelings.get(PanasFeelings.PROUD).ordinal())
             .build();
 
         datastore.add(fooEntity, barEntity, bazEntity);
@@ -312,6 +312,8 @@ public class SurveyServletAndResponseTest {
         loadTestData(true);
         Set<SurveyResponse> expected = new HashSet<>();
         expected.add(expectedData.get("Foo"));
+        expected.add(expectedData.get("Bar"));
+        expected.add(expectedData.get("Baz"));
         Set<SurveyResponse> result = SurveyServlet.queryByUser("Foo");
         assertEquals(expected, result);
         assertEquals(3, result.size());

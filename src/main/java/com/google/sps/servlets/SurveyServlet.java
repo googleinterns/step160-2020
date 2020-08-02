@@ -1,7 +1,18 @@
 package com.google.sps.servlets;
 
+import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.DatastoreOptions;
+import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
+import com.google.cloud.datastore.Query;
+import com.google.cloud.datastore.QueryResults;
+import com.google.cloud.datastore.Value;
+import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,7 +37,19 @@ public class SurveyServlet extends HttpServlet {
     * that represent the survey responses containing {@code feeling}.
     */
     public static Set<SurveyResponse> queryByFeeling(PanasFeelings feeling) {
-        throw new UnsupportedOperationException();
+        Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+        Query<Entity> query = Query.newEntityQueryBuilder()
+            .setKind("SurveyResponse")
+            .setFilter(PropertyFilter.ge(feeling.name(), 0))
+            .build();
+        QueryResults<Entity> queryResults = datastore.run(query);
+
+        Set<SurveyResponse> processedResults = new HashSet<>();
+        for ( ; queryResults.hasNext(); ) {
+            processedResults.add(convertEntityToSurveyResponse(queryResults.next()));
+        }
+
+        return processedResults;
     }
 
     /** 
@@ -34,7 +57,53 @@ public class SurveyServlet extends HttpServlet {
     * that represent the survey responses submitted by {@code user}.
     */
     public static Set<SurveyResponse> queryByUser(String user) {
-        throw new UnsupportedOperationException();
+        Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+        Query<Entity> query = Query.newEntityQueryBuilder()
+            .setKind("SurveyResponse")
+            .setFilter(PropertyFilter.hasAncestor(
+                datastore.newKeyFactory().setKind("User").newKey(user)))
+            .build();
+        QueryResults<Entity> queryResults = datastore.run(query);
+
+        Set<SurveyResponse> processedResults = new HashSet<>();
+        for ( ; queryResults.hasNext(); ) {
+            processedResults.add(convertEntityToSurveyResponse(queryResults.next()));
+        }
+
+        return processedResults;
+    }
+    
+    /** 
+     * Reads the data in the given entity {@code entity} to build and return the corresponding 
+     * {@code SurveyResponse} instance.
+     */
+    private static SurveyResponse convertEntityToSurveyResponse(Entity entity) {
+        Set<String> allProperties = entity.getNames();
+        Set<String> knownProperties = new HashSet<>();
+        knownProperties.add("text");
+        knownProperties.add("city");
+        knownProperties.add("state");
+        knownProperties.add("timestamp");
+
+        Map<PanasFeelings, PanasIntensity> mutableFeelings = new HashMap<>();
+        for(String property : allProperties) {
+            if (!knownProperties.contains(property)) {
+                mutableFeelings.put(PanasFeelings.valueOf(property), 
+                    PanasIntensity.values[(int) entity.getLong(property)]);
+            }
+        }
+
+        ImmutableMap<PanasFeelings, PanasIntensity> feelings = ImmutableMap.copyOf(mutableFeelings);
+
+        SurveyResponse result = SurveyResponse.create(
+            entity.getKey().getParent().getName(), 
+            feelings,
+            entity.getString("text"),
+            entity.getString("city"),
+            entity.getString("state"),
+            entity.getLong("timestamp"));
+
+        return result;
     }
 
     /** 

@@ -6,20 +6,12 @@ package com.google.sps.servlets;
  * https://www.brandeis.edu/roybal/docs/PANAS-GEN_website_PDF.pdf
  */
 public enum PanasIntensity {
-    NOT_AT_ALL(0),
-    VERY_SLIGHTLY(1),
-    A_LITTLE(2),
-    MODERATELY(3),
-    QUITE_A_BIT(4),
-    EXTREMELY(5);
+    NOT_AT_ALL,
+    VERY_SLIGHTLY,
+    A_LITTLE,
+    MODERATELY,
+    QUITE_A_BIT,
+    EXTREMELY;
 
-    private final int value;
-
-    private PanasIntensity(int value) {
-        this.value = value;
-    }
-
-    public int getValue() {
-        return value;
-    }
+    public static final PanasIntensity values[] = values();
 }
