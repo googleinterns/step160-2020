@@ -13,11 +13,9 @@ import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.PathElement;
 import com.google.cloud.datastore.testing.LocalDatastoreHelper;
-import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +26,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** 
- * Tests for the SurveyServlet and SurveyResponse classes.
+/**
+ * Tests for the SurveyServlet class.
  *
  * Make sure to set the project you're working on in your shell with:
  * gcloud config set project [PROJECT_NAME]
@@ -37,32 +35,11 @@ import org.junit.Test;
  * Skeleton code for Datastore emulator from:
  * https://stackoverflow.com/questions/40348653/google-datastore-emulator-using-java-not-using-gae
  */
-public class SurveyServletAndResponseTest {
+public class SurveyServletTest extends testData {
 
     protected static LocalDatastoreHelper localDatastoreHelper;
     protected Datastore datastore;
     protected KeyFactory keyFactory;
-
-    private static ImmutableMap<PanasFeelings, PanasIntensity> fooFeelings;
-    private static ImmutableMap<PanasFeelings, PanasIntensity> barFeelings;
-    private static ImmutableMap<PanasFeelings, PanasIntensity> bazFeelings;
-
-    private static final String fooText = "I feel many things";
-    private static final String barText = "COVID is making me sad";
-    private static final String bazText = "I'm a movie star";
-
-    private static final String fooCity = "Cambridge";
-    private static final String barCity = "Deerfield Beach";
-    private static final String bazCity = "Beverly Hills";
-
-    private static final String fooState = "MA";
-    private static final String barState = "FL";
-    private static final String bazState = "CA";
-
-    private static final long fooTimestamp = 1595706791802L;
-    private static final long barTimestamp = 1595795898000L;
-    private static final long bazTimestamp = 1595706828426L;
-
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException {
@@ -74,27 +51,6 @@ public class SurveyServletAndResponseTest {
 
         // Set the system property to tell the gcloud lib to use the datastore emulator
         System.setProperty("DATASTORE_EMULATOR_HOST","localhost:" + localDatastoreHelper.getPort());
-    }
-
-    @BeforeClass
-    public static void buildFeelingMaps() {
-        final Map<PanasFeelings, PanasIntensity> fooMutableFeelings = new HashMap<>();
-        final Map<PanasFeelings, PanasIntensity> barMutableFeelings = new HashMap<>();
-        final Map<PanasFeelings, PanasIntensity> bazMutableFeelings = new HashMap<>();
-
-        fooMutableFeelings.put(PanasFeelings.JITTERY, PanasIntensity.EXTREMELY);
-        fooMutableFeelings.put(PanasFeelings.ALERT, PanasIntensity.QUITE_A_BIT);
-        fooMutableFeelings.put(PanasFeelings.UPSET, PanasIntensity.QUITE_A_BIT);
-        barMutableFeelings.put(PanasFeelings.JITTERY, PanasIntensity.EXTREMELY);
-        barMutableFeelings.put(PanasFeelings.ALERT, PanasIntensity.EXTREMELY);
-        barMutableFeelings.put(PanasFeelings.AFRAID, PanasIntensity.QUITE_A_BIT);
-        barMutableFeelings.put(PanasFeelings.NERVOUS, PanasIntensity.QUITE_A_BIT);
-        bazMutableFeelings.put(PanasFeelings.ALERT, PanasIntensity.QUITE_A_BIT);
-        bazMutableFeelings.put(PanasFeelings.PROUD, PanasIntensity.QUITE_A_BIT);
-
-        fooFeelings = ImmutableMap.copyOf(fooMutableFeelings); 
-        barFeelings = ImmutableMap.copyOf(barMutableFeelings); 
-        bazFeelings = ImmutableMap.copyOf(bazMutableFeelings);
     }
 
     @Before
@@ -120,6 +76,8 @@ public class SurveyServletAndResponseTest {
         localDatastoreHelper.stop();
     }
 
+
+    // Testing emulator properly resets between tests
 
     @Test
     public void testNotLeakingState1() {
@@ -147,6 +105,7 @@ public class SurveyServletAndResponseTest {
         Entity entity = datastore.get(keyFactory.newKey(42));
         assertNull(entity);
     }
+
 
     // SurveyServlet tests
 
@@ -239,110 +198,6 @@ public class SurveyServletAndResponseTest {
         assertEquals(expected, SurveyServlet.queryMostIntense());
     }
 
-
-    // SurveyResponse tests
-
-    @Test
-    public void testUser() {
-        Map<String, SurveyResponse> expectedData = generateExpectedData(false);
-        assertEquals("Foo", expectedData.get("Foo").user());
-        assertEquals("Bar", expectedData.get("Bar").user());
-        assertEquals("Baz", expectedData.get("Baz").user());
-    }
-
-    @Test
-    public void testFeelings() {
-        Map<String, SurveyResponse> expectedData = generateExpectedData(false);
-        assertEquals(fooFeelings, expectedData.get("Foo").feelings());
-        assertEquals(barFeelings, expectedData.get("Bar").feelings());
-        assertEquals(bazFeelings, expectedData.get("Baz").feelings());
-        Map<PanasFeelings, PanasIntensity> immutableMap = expectedData.get("Foo").feelings();
-        assertThrows(UnsupportedOperationException.class, () -> {
-            immutableMap.put(PanasFeelings.PROUD, PanasIntensity.QUITE_A_BIT);
-        });
-    }
-
-    @Test
-    public void testText() {
-        Map<String, SurveyResponse> expectedData = generateExpectedData(false);
-        assertEquals(fooText, expectedData.get("Foo").text());
-        assertEquals(barText, expectedData.get("Bar").text());
-        assertEquals(bazText, expectedData.get("Baz").text());
-    }
-
-    @Test
-    public void testCity() {
-        Map<String, SurveyResponse> expectedData = generateExpectedData(false);
-        assertEquals(fooCity, expectedData.get("Foo").city());
-        assertEquals(barCity, expectedData.get("Bar").city());
-        assertEquals(bazCity, expectedData.get("Baz").city());
-    }
-
-    @Test
-    public void testState() {
-        Map<String, SurveyResponse> expectedData = generateExpectedData(false);
-        assertEquals(fooState, expectedData.get("Foo").state());
-        assertEquals(barState, expectedData.get("Bar").state());
-        assertEquals(bazState, expectedData.get("Baz").state());
-    }
-
-    @Test
-    public void testTimestamp() {
-        Map<String, SurveyResponse> expectedData = generateExpectedData(false);
-        assertEquals(fooTimestamp, expectedData.get("Foo").timestamp());
-        assertEquals(barTimestamp, expectedData.get("Bar").timestamp());
-        assertEquals(bazTimestamp, expectedData.get("Baz").timestamp());
-    }
-
-    /**
-     * Builds SurveyResponse instances out of the test data.
-     */
-    private Map<String, SurveyResponse> generateExpectedData(boolean sameUser) {
-        
-        final SurveyResponse fooSurveyResponse = SurveyResponse.create(
-            "Foo",
-            fooFeelings,
-            fooText,
-            fooCity,
-            fooState,
-            fooTimestamp
-        );
-
-        final String barUser;
-        final String bazUser;
-
-        if (sameUser) {
-            barUser = "Foo";
-            bazUser = "Foo";
-        } else {
-            barUser = "Bar";
-            bazUser = "Baz";
-        }
-
-        final SurveyResponse barSurveyResponse = SurveyResponse.create(
-            barUser,
-            barFeelings,
-            barText,
-            barCity,
-            barState,
-            barTimestamp
-        );
-        final SurveyResponse bazSurveyResponse = SurveyResponse.create(
-            bazUser,
-            bazFeelings,
-            bazText,
-            bazCity,
-            bazState,
-            bazTimestamp
-        );
-
-        final Map<String, SurveyResponse> expectedData = new HashMap<>();
-        expectedData.put("Foo", fooSurveyResponse);
-        expectedData.put("Bar", barSurveyResponse);
-        expectedData.put("Baz", bazSurveyResponse);
-
-        return expectedData;
-    }
 
     /**
      * Loads Entities corresponding to the test data into the local datastore instance.
