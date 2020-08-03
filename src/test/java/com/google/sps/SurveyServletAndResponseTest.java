@@ -79,7 +79,7 @@ public class SurveyServletAndResponseTest {
     }
 
     @Test
-    public void test1() {
+    public void testNotLeakingState1() {
         // Stores an entity in the datastore and retrieves it later
 
         // Create an Entity "TestEntity"
@@ -96,7 +96,7 @@ public class SurveyServletAndResponseTest {
     }
 
     @Test
-    public void test2() {
+    public void testNotLeakingState2() {
         // Try to access the entity created in test1, shouldn't work because
         // of calling reset in tearDown() after each test.
 
