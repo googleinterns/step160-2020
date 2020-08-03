@@ -43,6 +43,27 @@ public class SurveyServletAndResponseTest {
     protected Datastore datastore;
     protected KeyFactory keyFactory;
 
+    private static ImmutableMap<PanasFeelings, PanasIntensity> fooFeelings;
+    private static ImmutableMap<PanasFeelings, PanasIntensity> barFeelings;
+    private static ImmutableMap<PanasFeelings, PanasIntensity> bazFeelings;
+
+    private static final String fooText = "I feel many things";
+    private static final String barText = "COVID is making me sad";
+    private static final String bazText = "I'm a movie star";
+
+    private static final String fooCity = "Cambridge";
+    private static final String barCity = "Deerfield Beach";
+    private static final String bazCity = "Beverly Hills";
+
+    private static final String fooState = "MA";
+    private static final String barState = "FL";
+    private static final String bazState = "CA";
+
+    private static final long fooTimestamp = 1595706791802L;
+    private static final long barTimestamp = 1595795898000L;
+    private static final long bazTimestamp = 1595706828426L;
+
+
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException {
         // Create and start a local datastore emulator on a random free port
@@ -53,6 +74,27 @@ public class SurveyServletAndResponseTest {
 
         // Set the system property to tell the gcloud lib to use the datastore emulator
         System.setProperty("DATASTORE_EMULATOR_HOST","localhost:" + localDatastoreHelper.getPort());
+    }
+
+    @BeforeClass
+    public static void buildFeelingMaps() {
+        final Map<PanasFeelings, PanasIntensity> fooMutableFeelings = new HashMap<>();
+        final Map<PanasFeelings, PanasIntensity> barMutableFeelings = new HashMap<>();
+        final Map<PanasFeelings, PanasIntensity> bazMutableFeelings = new HashMap<>();
+
+        fooMutableFeelings.put(PanasFeelings.JITTERY, PanasIntensity.EXTREMELY);
+        fooMutableFeelings.put(PanasFeelings.ALERT, PanasIntensity.QUITE_A_BIT);
+        fooMutableFeelings.put(PanasFeelings.UPSET, PanasIntensity.QUITE_A_BIT);
+        barMutableFeelings.put(PanasFeelings.JITTERY, PanasIntensity.EXTREMELY);
+        barMutableFeelings.put(PanasFeelings.ALERT, PanasIntensity.EXTREMELY);
+        barMutableFeelings.put(PanasFeelings.AFRAID, PanasIntensity.QUITE_A_BIT);
+        barMutableFeelings.put(PanasFeelings.NERVOUS, PanasIntensity.QUITE_A_BIT);
+        bazMutableFeelings.put(PanasFeelings.ALERT, PanasIntensity.QUITE_A_BIT);
+        bazMutableFeelings.put(PanasFeelings.PROUD, PanasIntensity.QUITE_A_BIT);
+
+        fooFeelings = ImmutableMap.copyOf(fooMutableFeelings); 
+        barFeelings = ImmutableMap.copyOf(barMutableFeelings); 
+        bazFeelings = ImmutableMap.copyOf(bazMutableFeelings);
     }
 
     @Before
@@ -77,6 +119,7 @@ public class SurveyServletAndResponseTest {
         // This stops the datastore emulator after all tests are done
         localDatastoreHelper.stop();
     }
+
 
     @Test
     public void testNotLeakingState1() {
@@ -104,168 +147,6 @@ public class SurveyServletAndResponseTest {
         Entity entity = datastore.get(keyFactory.newKey(42));
         assertNull(entity);
     }
-
-    
-    // Creating SurveyResponse instances to use in tests:
-
-    private static ImmutableMap<PanasFeelings, PanasIntensity> fooFeelings;
-    private static ImmutableMap<PanasFeelings, PanasIntensity> barFeelings;
-    private static ImmutableMap<PanasFeelings, PanasIntensity> bazFeelings;
-
-    @BeforeClass
-    public static void buildFeelingMaps() {
-        final Map<PanasFeelings, PanasIntensity> fooMutableFeelings = new HashMap<>();
-        final Map<PanasFeelings, PanasIntensity> barMutableFeelings = new HashMap<>();
-        final Map<PanasFeelings, PanasIntensity> bazMutableFeelings = new HashMap<>();
-
-        fooMutableFeelings.put(PanasFeelings.JITTERY, PanasIntensity.EXTREMELY);
-        fooMutableFeelings.put(PanasFeelings.ALERT, PanasIntensity.QUITE_A_BIT);
-        fooMutableFeelings.put(PanasFeelings.UPSET, PanasIntensity.QUITE_A_BIT);
-        barMutableFeelings.put(PanasFeelings.JITTERY, PanasIntensity.EXTREMELY);
-        barMutableFeelings.put(PanasFeelings.ALERT, PanasIntensity.EXTREMELY);
-        barMutableFeelings.put(PanasFeelings.AFRAID, PanasIntensity.QUITE_A_BIT);
-        barMutableFeelings.put(PanasFeelings.NERVOUS, PanasIntensity.QUITE_A_BIT);
-        bazMutableFeelings.put(PanasFeelings.ALERT, PanasIntensity.QUITE_A_BIT);
-        bazMutableFeelings.put(PanasFeelings.PROUD, PanasIntensity.QUITE_A_BIT);
-
-        fooFeelings = ImmutableMap.copyOf(fooMutableFeelings); 
-        barFeelings = ImmutableMap.copyOf(barMutableFeelings); 
-        bazFeelings = ImmutableMap.copyOf(bazMutableFeelings);
-    }
-
-    private static final String fooText = "I feel many things";
-    private static final String barText = "COVID is making me sad";
-    private static final String bazText = "I'm a movie star";
-
-    private static final String fooCity = "Cambridge";
-    private static final String barCity = "Deerfield Beach";
-    private static final String bazCity = "Beverly Hills";
-
-    private static final String fooState = "MA";
-    private static final String barState = "FL";
-    private static final String bazState = "CA";
-
-    private static final long fooTimestamp = 1595706791802L;
-    private static final long barTimestamp = 1595795898000L;
-    private static final long bazTimestamp = 1595706828426L;
-
-    /**
-     * Builds SurveyResponse instances out of the test data.
-     */
-    private Map<String, SurveyResponse> generateExpectedData(boolean sameUser) {
-        
-        final SurveyResponse fooSurveyResponse = SurveyResponse.create(
-            "Foo",
-            fooFeelings,
-            fooText,
-            fooCity,
-            fooState,
-            fooTimestamp
-        );
-
-        final String barUser;
-        final String bazUser;
-
-        if (sameUser) {
-            barUser = "Foo";
-            bazUser = "Foo";
-        } else {
-            barUser = "Bar";
-            bazUser = "Baz";
-        }
-
-        final SurveyResponse barSurveyResponse = SurveyResponse.create(
-            barUser,
-            barFeelings,
-            barText,
-            barCity,
-            barState,
-            barTimestamp
-        );
-        final SurveyResponse bazSurveyResponse = SurveyResponse.create(
-            bazUser,
-            bazFeelings,
-            bazText,
-            bazCity,
-            bazState,
-            bazTimestamp
-        );
-
-        final Map<String, SurveyResponse> expectedData = new HashMap<>();
-        expectedData.put("Foo", fooSurveyResponse);
-        expectedData.put("Bar", barSurveyResponse);
-        expectedData.put("Baz", bazSurveyResponse);
-
-        return expectedData;
-    }
-
-    /**
-     * Loads Entities corresponding to the test data into the local datastore instance.
-     */
-    private void loadTestData(boolean sameUser) {
-        IncompleteKey fooIncompleteKey = datastore.newKeyFactory()
-            .addAncestors(PathElement.of("User", "Foo"))
-            .setKind("SurveyResponse")
-            .setProjectId("manage-at-scale-step-2020")
-            .newKey();
-        Key fooKey = datastore.allocateId(fooIncompleteKey);
-        Entity fooEntity = Entity.newBuilder(fooKey)
-            .set("timestamp", fooTimestamp)
-            .set("city", fooCity)
-            .set("state", fooState)
-            .set("text", fooText)
-            .set("JITTERY", fooFeelings.get(PanasFeelings.JITTERY).ordinal())
-            .set("ALERT", fooFeelings.get(PanasFeelings.ALERT).ordinal())
-            .set("UPSET", fooFeelings.get(PanasFeelings.UPSET).ordinal())
-            .build();
-
-        final String barUser;
-        final String bazUser;
-
-        // In case we want to test how a method acts when every username is the same:
-        if (sameUser) {
-            barUser = "Foo";
-            bazUser = "Foo";
-        } else {
-            barUser = "Bar";
-            bazUser = "Baz";
-        }
-
-        IncompleteKey barIncompleteKey = datastore.newKeyFactory()
-            .addAncestors(PathElement.of("User", barUser))
-            .setKind("SurveyResponse")
-            .setProjectId("manage-at-scale-step-2020")
-            .newKey();
-        Key barKey = datastore.allocateId(barIncompleteKey);
-        Entity barEntity = Entity.newBuilder(barKey)
-            .set("timestamp", barTimestamp)
-            .set("city", barCity)
-            .set("state", barState)
-            .set("text", barText)
-            .set("JITTERY", barFeelings.get(PanasFeelings.JITTERY).ordinal())
-            .set("ALERT", barFeelings.get(PanasFeelings.ALERT).ordinal())
-            .set("AFRAID", barFeelings.get(PanasFeelings.AFRAID).ordinal())
-            .set("NERVOUS", barFeelings.get(PanasFeelings.NERVOUS).ordinal())
-            .build();
-
-        IncompleteKey bazIncompleteKey = datastore.newKeyFactory()
-            .addAncestors(PathElement.of("User", bazUser))
-            .setKind("SurveyResponse")
-            .setProjectId("manage-at-scale-step-2020")
-            .newKey();
-        Key bazKey = datastore.allocateId(bazIncompleteKey);
-        Entity bazEntity = Entity.newBuilder(bazKey)
-            .set("timestamp", bazTimestamp)
-            .set("city", bazCity)
-            .set("state", bazState)
-            .set("text", bazText)
-            .set("ALERT", bazFeelings.get(PanasFeelings.ALERT).ordinal())
-            .set("PROUD", bazFeelings.get(PanasFeelings.PROUD).ordinal())
-            .build();
-
-        datastore.add(fooEntity, barEntity, bazEntity);
-    }
-
 
     // SurveyServlet tests
 
@@ -411,5 +292,122 @@ public class SurveyServletAndResponseTest {
         assertEquals(fooTimestamp, expectedData.get("Foo").timestamp());
         assertEquals(barTimestamp, expectedData.get("Bar").timestamp());
         assertEquals(bazTimestamp, expectedData.get("Baz").timestamp());
+    }
+
+    /**
+     * Builds SurveyResponse instances out of the test data.
+     */
+    private Map<String, SurveyResponse> generateExpectedData(boolean sameUser) {
+        
+        final SurveyResponse fooSurveyResponse = SurveyResponse.create(
+            "Foo",
+            fooFeelings,
+            fooText,
+            fooCity,
+            fooState,
+            fooTimestamp
+        );
+
+        final String barUser;
+        final String bazUser;
+
+        if (sameUser) {
+            barUser = "Foo";
+            bazUser = "Foo";
+        } else {
+            barUser = "Bar";
+            bazUser = "Baz";
+        }
+
+        final SurveyResponse barSurveyResponse = SurveyResponse.create(
+            barUser,
+            barFeelings,
+            barText,
+            barCity,
+            barState,
+            barTimestamp
+        );
+        final SurveyResponse bazSurveyResponse = SurveyResponse.create(
+            bazUser,
+            bazFeelings,
+            bazText,
+            bazCity,
+            bazState,
+            bazTimestamp
+        );
+
+        final Map<String, SurveyResponse> expectedData = new HashMap<>();
+        expectedData.put("Foo", fooSurveyResponse);
+        expectedData.put("Bar", barSurveyResponse);
+        expectedData.put("Baz", bazSurveyResponse);
+
+        return expectedData;
+    }
+
+    /**
+     * Loads Entities corresponding to the test data into the local datastore instance.
+     */
+    private void loadTestData(boolean sameUser) {
+        IncompleteKey fooIncompleteKey = datastore.newKeyFactory()
+            .addAncestors(PathElement.of("User", "Foo"))
+            .setKind("SurveyResponse")
+            .setProjectId("manage-at-scale-step-2020")
+            .newKey();
+        Key fooKey = datastore.allocateId(fooIncompleteKey);
+        Entity fooEntity = Entity.newBuilder(fooKey)
+            .set("timestamp", fooTimestamp)
+            .set("city", fooCity)
+            .set("state", fooState)
+            .set("text", fooText)
+            .set("JITTERY", fooFeelings.get(PanasFeelings.JITTERY).ordinal())
+            .set("ALERT", fooFeelings.get(PanasFeelings.ALERT).ordinal())
+            .set("UPSET", fooFeelings.get(PanasFeelings.UPSET).ordinal())
+            .build();
+
+        final String barUser;
+        final String bazUser;
+
+        // In case we want to test how a method acts when every username is the same:
+        if (sameUser) {
+            barUser = "Foo";
+            bazUser = "Foo";
+        } else {
+            barUser = "Bar";
+            bazUser = "Baz";
+        }
+
+        IncompleteKey barIncompleteKey = datastore.newKeyFactory()
+            .addAncestors(PathElement.of("User", barUser))
+            .setKind("SurveyResponse")
+            .setProjectId("manage-at-scale-step-2020")
+            .newKey();
+        Key barKey = datastore.allocateId(barIncompleteKey);
+        Entity barEntity = Entity.newBuilder(barKey)
+            .set("timestamp", barTimestamp)
+            .set("city", barCity)
+            .set("state", barState)
+            .set("text", barText)
+            .set("JITTERY", barFeelings.get(PanasFeelings.JITTERY).ordinal())
+            .set("ALERT", barFeelings.get(PanasFeelings.ALERT).ordinal())
+            .set("AFRAID", barFeelings.get(PanasFeelings.AFRAID).ordinal())
+            .set("NERVOUS", barFeelings.get(PanasFeelings.NERVOUS).ordinal())
+            .build();
+
+        IncompleteKey bazIncompleteKey = datastore.newKeyFactory()
+            .addAncestors(PathElement.of("User", bazUser))
+            .setKind("SurveyResponse")
+            .setProjectId("manage-at-scale-step-2020")
+            .newKey();
+        Key bazKey = datastore.allocateId(bazIncompleteKey);
+        Entity bazEntity = Entity.newBuilder(bazKey)
+            .set("timestamp", bazTimestamp)
+            .set("city", bazCity)
+            .set("state", bazState)
+            .set("text", bazText)
+            .set("ALERT", bazFeelings.get(PanasFeelings.ALERT).ordinal())
+            .set("PROUD", bazFeelings.get(PanasFeelings.PROUD).ordinal())
+            .build();
+
+        datastore.add(fooEntity, barEntity, bazEntity);
     }
 }
