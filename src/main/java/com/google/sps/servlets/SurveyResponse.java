@@ -14,20 +14,28 @@ import java.util.Set;
 abstract class SurveyResponse {
 
     /** 
-     * Create a SurveyResponse instance representing a single survey response submitted 
-     * by {@code user}, processed by the server at {@code timestamp} UNIX time, and containing 
-     * the message {@code text}, the city {@code city} and state {@code state} (provided by the 
-     * user), and the feelings and respective intensities indicated on the survey as the 
+     * Builder method for SurveyResponse.
+     */
+    static Builder builder() {
+        return new AutoValue_SurveyResponse.Builder();
+    }
+
+    /**
+     * Builder pattern implementation for SurveyResponse, representing a single survey response 
+     * submitted by {@code user}, processed by the server at {@code timestamp} UNIX time, and 
+     * containing the message {@code text}, the city {@code city} and state {@code state} (provided 
+     * by the user), and the feelings and respective intensities indicated on the survey as the 
      * map {@code feelings}.
      */
-    static SurveyResponse create(
-        String user, 
-        ImmutableMap<PanasFeelings, PanasIntensity> feelings,
-        String text,
-        String city,
-        String state,
-        long timestamp) {
-        return new AutoValue_SurveyResponse(user, feelings, text, city, state, timestamp);
+    @AutoValue.Builder
+    abstract static class Builder {
+        abstract Builder setUser(String user);
+        abstract Builder setFeelings(ImmutableMap<PanasFeelings, PanasIntensity> feelings);
+        abstract Builder setText(String text);
+        abstract Builder setCity(String city);
+        abstract Builder setState(String state);
+        abstract Builder setTimestamp(long timestamp);
+        abstract SurveyResponse build();
     }
 
     /** Returns the username included in the survey response.*/

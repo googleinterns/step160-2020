@@ -98,14 +98,14 @@ public class SurveyServlet extends HttpServlet {
         }
 
         ImmutableMap<PanasFeelings, PanasIntensity> feelings = ImmutableMap.copyOf(mutableFeelings);
-
-        SurveyResponse result = SurveyResponse.create(
-            entity.getKey().getParent().getName(), 
-            feelings,
-            entity.getString("text"),
-            entity.getString("city"),
-            entity.getString("state"),
-            entity.getLong("timestamp"));
+        SurveyResponse result = SurveyResponse.builder()
+            .setUser(entity.getKey().getParent().getName())
+            .setFeelings(feelings)
+            .setText(entity.getString("text"))
+            .setCity(entity.getString("city"))
+            .setState(entity.getString("state"))
+            .setTimestamp(entity.getLong("timestamp"))
+            .build();
 
         return result;
     }

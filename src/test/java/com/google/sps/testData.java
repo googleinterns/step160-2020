@@ -58,15 +58,15 @@ public class testData {
      * Builds SurveyResponse instances out of the test data.
      */
     protected static Map<String, SurveyResponse> generateExpectedData(boolean sameUser) {
-        
-        final SurveyResponse fooSurveyResponse = SurveyResponse.create(
-            "Foo",
-            fooFeelings,
-            fooText,
-            fooCity,
-            fooState,
-            fooTimestamp
-        );
+
+        final SurveyResponse fooSurveyResponse = SurveyResponse.builder()
+            .setUser("Foo")
+            .setFeelings(fooFeelings)
+            .setText(fooText)
+            .setCity(fooCity)
+            .setState(fooState)
+            .setTimestamp(fooTimestamp)
+            .build();
 
         final String barUser;
         final String bazUser;
@@ -79,22 +79,23 @@ public class testData {
             bazUser = "Baz";
         }
 
-        final SurveyResponse barSurveyResponse = SurveyResponse.create(
-            barUser,
-            barFeelings,
-            barText,
-            barCity,
-            barState,
-            barTimestamp
-        );
-        final SurveyResponse bazSurveyResponse = SurveyResponse.create(
-            bazUser,
-            bazFeelings,
-            bazText,
-            bazCity,
-            bazState,
-            bazTimestamp
-        );
+        final SurveyResponse barSurveyResponse = SurveyResponse.builder()
+            .setUser(barUser)
+            .setFeelings(barFeelings)
+            .setText(barText)
+            .setCity(barCity)
+            .setState(barState)
+            .setTimestamp(barTimestamp)
+            .build();
+
+        final SurveyResponse bazSurveyResponse = SurveyResponse.builder()
+            .setUser(bazUser)
+            .setFeelings(bazFeelings)
+            .setText(bazText)
+            .setCity(bazCity)
+            .setState(bazState)
+            .setTimestamp(bazTimestamp)
+            .build();
 
         final Map<String, SurveyResponse> expectedData = new HashMap<>();
         expectedData.put("Foo", fooSurveyResponse);
