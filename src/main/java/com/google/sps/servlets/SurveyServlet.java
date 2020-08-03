@@ -3,12 +3,16 @@ package com.google.sps.servlets;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.ProjectionEntity;
+import com.google.cloud.datastore.StructuredQuery.OrderBy;
 import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
 import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.Value;
 import com.google.common.collect.ImmutableMap;
+import com.google.cloud.Timestamp;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -112,7 +116,51 @@ public class SurveyServlet extends HttpServlet {
     * feeling included most recently in a survey response, and then alphabetically.
     */
     public static List<PanasFeelings> queryMostWidespread() {
-        throw new UnsupportedOperationException();
+        Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+
+        List<PanasFeelings> mostWidespread = new ArrayList<>();
+        Map<PanasFeelings, Integer> feelingCount = new HashMap<>();
+        Map<PanasFeelings, Long> timestamps = new HashMap<>();
+        for (PanasFeelings feeling : PanasFeelings.values()) {
+            Query<ProjectionEntity> query = Query.newProjectionEntityQueryBuilder()
+                .setKind("SurveyResponse")
+                .setProjection(feeling.name(), "timestamp")
+                .build();
+            QueryResults<ProjectionEntity> queryResults = datastore.run(query);
+
+            int count = 0;
+            while (queryResults.hasNext()) {
+                ProjectionEntity entity = queryResults.next();
+                count++;
+                long entityTimestamp = entity.getLong("timestamp");
+                if (!timestamps.containsKey(feeling) || entityTimestamp > timestamps.get(feeling)) {
+                    timestamps.put(feeling, entityTimestamp);
+                }
+            }
+            
+            if (count > 0) {
+                feelingCount.put(feeling, count);
+                long timestamp = timestamps.get(feeling);
+
+                int indexToPlaceFeeling = 0;
+                for (PanasFeelings rankedFeeling : mostWidespread) {
+                    int rankedFeelingCount = feelingCount.get(rankedFeeling);
+                    long rankedFeelingTimestamp = timestamps.get(rankedFeeling);
+                    if (count > rankedFeelingCount) {
+                        break;
+                    } else if (count == rankedFeelingCount && timestamp > rankedFeelingTimestamp) {
+                        break;
+                    } else if (count == rankedFeelingCount && 
+                        timestamp == rankedFeelingTimestamp &&
+                        (feeling.name()).compareTo(rankedFeeling.name()) < 0) {
+                        break;
+                    }
+                    indexToPlaceFeeling++;
+                }
+                mostWidespread.add(indexToPlaceFeeling, feeling);
+            }
+        }
+        return mostWidespread.subList(0, (mostWidespread.size() < 3 ? mostWidespread.size() : 3));
     }
 
     /** 
