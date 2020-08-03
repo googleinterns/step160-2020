@@ -169,6 +169,53 @@ public class SurveyServlet extends HttpServlet {
     * won by the feeling included most recently in a survey response, and then alphabetically.
     */
     public static List<PanasFeelings> queryMostIntense() {
-        throw new UnsupportedOperationException();
+        Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+
+        List<PanasFeelings> mostIntense = new ArrayList<>();
+        Map<PanasFeelings, Double> feelingAverages = new HashMap<>();
+        Map<PanasFeelings, Long> timestamps = new HashMap<>();
+        for (PanasFeelings feeling : PanasFeelings.values()) {
+            Query<ProjectionEntity> query = Query.newProjectionEntityQueryBuilder()
+                .setKind("SurveyResponse")
+                .setProjection(feeling.name(), "timestamp")
+                .build();
+            QueryResults<ProjectionEntity> queryResults = datastore.run(query);
+
+            double sum = 0;
+            int count = 0;
+            while (queryResults.hasNext()) {
+                ProjectionEntity entity = queryResults.next();
+                sum += (int) entity.getLong(feeling.name());
+                count++;
+                long entityTimestamp = entity.getLong("timestamp");
+                if (!timestamps.containsKey(feeling) || entityTimestamp > timestamps.get(feeling)) {
+                    timestamps.put(feeling, entityTimestamp);
+                }
+            }
+            
+            if (count > 0) {
+                double average = sum/count;
+                feelingAverages.put(feeling, average);
+                long timestamp = timestamps.get(feeling);
+
+                int indexToPlaceFeeling = 0;
+                for (PanasFeelings rankedFeeling : mostIntense) {
+                    double rankedFeelingAverage = feelingAverages.get(rankedFeeling);
+                    long rankedFeelingTimestamp = timestamps.get(rankedFeeling);
+                    if (average > rankedFeelingAverage) {
+                        break;
+                    } else if (average == rankedFeelingAverage && timestamp > rankedFeelingTimestamp) {
+                        break;
+                    } else if (average == rankedFeelingAverage && 
+                        timestamp == rankedFeelingTimestamp &&
+                        (feeling.name()).compareTo(rankedFeeling.name()) < 0) {
+                        break;
+                    }
+                    indexToPlaceFeeling++;
+                }
+                mostIntense.add(indexToPlaceFeeling, feeling);
+            }
+        }
+        return mostIntense.subList(0, (mostIntense.size() < 3 ? mostIntense.size() : 3));
     }
 }
