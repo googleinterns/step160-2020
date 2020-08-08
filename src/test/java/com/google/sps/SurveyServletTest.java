@@ -35,7 +35,7 @@ import org.junit.Test;
  * Skeleton code for Datastore emulator from:
  * https://stackoverflow.com/questions/40348653/google-datastore-emulator-using-java-not-using-gae
  */
-public class SurveyServletTest extends testData {
+public class SurveyServletTest extends TestData {
 
     protected static LocalDatastoreHelper localDatastoreHelper;
     protected Datastore datastore;
@@ -74,36 +74,6 @@ public class SurveyServletTest extends testData {
         System.out.println("[Datastore-Emulator] stop");
         // This stops the datastore emulator after all tests are done
         localDatastoreHelper.stop();
-    }
-
-
-    // Testing emulator properly resets between tests
-
-    @Test
-    public void testNotLeakingState1() {
-        // Stores an entity in the datastore and retrieves it later
-
-        // Create an Entity "TestEntity"
-        Entity.Builder builder = Entity.newBuilder(keyFactory.newKey(42));
-        builder.set("name", "Test1");
-
-        // Store it in datastore
-        datastore.put(builder.build());
-
-        // Retrieve entity by key
-        Entity entity = datastore.get(keyFactory.newKey(42));
-        assertNotNull(entity);
-        assertEquals("Test1", entity.getString("name"));
-    }
-
-    @Test
-    public void testNotLeakingState2() {
-        // Try to access the entity created in test1, shouldn't work because
-        // of calling reset in tearDown() after each test.
-
-        // Try to retrieve entity by key
-        Entity entity = datastore.get(keyFactory.newKey(42));
-        assertNull(entity);
     }
 
 

@@ -188,6 +188,7 @@ public class SurveyServlet extends HttpServlet {
                 sum += (int) entity.getLong(feeling.name());
                 count++;
                 long entityTimestamp = entity.getLong("timestamp");
+                // making sure the timestamps map has the most recent timestamp for each feeling
                 if (!timestamps.containsKey(feeling) || entityTimestamp > timestamps.get(feeling)) {
                     timestamps.put(feeling, entityTimestamp);
                 }

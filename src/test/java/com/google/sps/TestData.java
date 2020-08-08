@@ -11,7 +11,7 @@ import org.junit.BeforeClass;
  * Make sure to set the project you're working on in your shell with:
  * gcloud config set project [PROJECT_NAME]
  */
-public class testData {
+public class TestData {
 
     protected static ImmutableMap<PanasFeelings, PanasIntensity> fooFeelings;
     protected static ImmutableMap<PanasFeelings, PanasIntensity> barFeelings;

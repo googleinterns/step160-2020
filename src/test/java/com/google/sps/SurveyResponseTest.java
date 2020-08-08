@@ -12,7 +12,7 @@ import org.junit.Test;
  * Make sure to set the project you're working on in your shell with:
  * gcloud config set project [PROJECT_NAME]
  */
-public class SurveyResponseTest extends testData {
+public class SurveyResponseTest extends TestData {
 
     private static final Map<String, SurveyResponse> expectedData = 
         generateExpectedData(false);
