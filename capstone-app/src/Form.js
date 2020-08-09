@@ -8,7 +8,7 @@ class Form extends React.Component {
     super(props);
     this.state = {
       user: '',
-      // feelings
+      feelings: [],
       text: '',
       city: '',
       state: '',
@@ -16,6 +16,8 @@ class Form extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+
+    this.feelingUpdateHandler = feelings => this.setState({feelings: feelings});
   }
 
   handleChange(event) {
@@ -31,8 +33,10 @@ class Form extends React.Component {
     xhr.addEventListener('load', () => {
       console.log(xhr.responseText)
     });
-    xhr.open('POST', 'ELEPHANT URL');
-    xhr.send(JSON.stringify({}));
+    xhr.open('POST', 'http://localhost:8080/survey');
+    xhr.send(JSON.stringify(this.state));
+    // console.log(JSON.stringify(this.state));
+    // event.preventDefault();
   }
 
   render() {
@@ -59,7 +63,7 @@ class Form extends React.Component {
             <option value="">Select City</option>
           </select>
         </label>
-        {<FeelingDND />}
+        {<FeelingDND onChange={this.feelingUpdateHandler}/>}
         <input type="submit" value="Submit" />
       </form>
     );

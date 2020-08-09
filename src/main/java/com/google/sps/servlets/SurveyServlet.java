@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Class that handles incoming and outgoing PANAS survey responses.*/
+@WebServlet("/survey")
 public class SurveyServlet extends HttpServlet {
 
     @Override

@@ -30,7 +30,11 @@ class FeelingDND extends React.Component {
       return feeling;
     });
 
-    this.setState({feelings: feelings});
+    this.setState({feelings: feelings}, () => {this.props.onChange(this.state.feelings)});
+  }
+
+  onSubmit = () => {
+    return this.state.feelings;
   }
 
   render() {
@@ -58,7 +62,7 @@ class FeelingDND extends React.Component {
     return (
       <div className="drag-container">
         {Object.keys(categories).map((category, index) => {
-          return <div className="Category" // {Object.getOwnPropertyNames(categories)[index]}
+          return <div className="Category"
             onDragOver={(event) => this.onDragOver(event)}
             onDrop={(event) => {this.onDrop(event, Object.getOwnPropertyNames(categories)[index])}}>
             <span className="category-header">{Object.getOwnPropertyNames(categories)[index]}</span>
