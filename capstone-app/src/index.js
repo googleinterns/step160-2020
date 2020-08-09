@@ -1,7 +1,11 @@
+<<<<<<< HEAD
 // TODO alphabetize
+=======
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Survey from './Survey';
+>>>>>>> Clean up front end code, add comments
 import './index.css';
-import App from './App';
-import Form from './Form';
 import * as serviceWorker from './serviceWorker';
 import React from "react";
 import ReactDOM from "react-dom";

@@ -1,9 +1,8 @@
-import React from 'react';
-import logo from './logo.svg';
-
 import FeelingDND from './FeelingDND';
+import React from 'react';
 
-class Form extends React.Component {
+/** Survey component to collect PANAS survey data. */
+export default class Survey extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,16 +26,12 @@ class Form extends React.Component {
   }
 
   handleSubmit(event) {
-    // alert('The survey was submitted by: ' + this.state.user);
-    // event.preventDefault();  // TODO make a post request
     var xhr = new XMLHttpRequest();
     xhr.addEventListener('load', () => {
       console.log(xhr.responseText)
     });
     xhr.open('POST', 'http://localhost:8080/survey');
     xhr.send(JSON.stringify(this.state));
-    // console.log(JSON.stringify(this.state));
-    // event.preventDefault();
   }
 
   render() {
@@ -69,5 +64,3 @@ class Form extends React.Component {
     );
   }
 }
-
-export default Form;

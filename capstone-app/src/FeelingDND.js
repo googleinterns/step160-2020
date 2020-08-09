@@ -1,27 +1,51 @@
 import React from 'react';
 import './FeelingDND.css';
 
-// TODO comments, class names for css should be caps first (check app.css)
-// source https://www.freecodecamp.org/news/reactjs-implement-drag-and-drop-feature-without-using-external-libraries-ad8994429f1a/
-class FeelingDND extends React.Component {
-  state = {
-    feelings: [
-      {name:"Interested", category:"pool"},
-      {name:"Distressed", category:"pool"},
-      {name:"Excited", category:"pool"}
-    ]
+/** 
+ * Drag-and-drop feeling component for PANAS survey. 
+ * 
+ * Starter code for drag-and-drop functionality from:
+ * https://www.freecodecamp.org/news/reactjs-implement-drag-and-drop-feature-without-using-external-libraries-ad8994429f1a/
+ */
+export default class FeelingDND extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      feelings: [
+        {name:"Interested", category:"pool"},
+        {name:"Distressed", category:"pool"},
+        {name:"Excited", category:"pool"},
+        {name:"Upset", category:"pool"},
+        {name:"Strong", category:"pool"},
+        {name:"Guilty", category:"pool"},
+        {name:"Scared", category:"pool"},
+        {name:"Hostile", category:"pool"},
+        {name:"Enthusiastic", category:"pool"},
+        {name:"Proud", category:"pool"},
+        {name:"Irritable", category:"pool"},
+        {name:"Alert", category:"pool"},
+        {name:"Ashamed", category:"pool"},
+        {name:"Inspired", category:"pool"},
+        {name:"Nervous", category:"pool"},
+        {name:"Determined", category:"pool"},
+        {name:"Attentive", category:"pool"},
+        {name:"Jittery", category:"pool"},
+        {name:"Active", category:"pool"},
+        {name:"Afraid", category:"pool"},
+      ]
+    };
   }
 
-  onDragStart = (event, name) => {
+  onDragStart(event, name) {
     console.log('dragstart: ', name);
     event.dataTransfer.setData("id", name);
   }
 
-  onDragOver = (event) => {
+  onDragOver(event) {
     event.preventDefault();
   }
 
-  onDrop = (event, category) => {
+  onDrop (event, category) {
     let id = event.dataTransfer.getData("id");
     let feelings = this.state.feelings.filter((feeling) => {
       if (feeling.name == id) {
@@ -33,7 +57,7 @@ class FeelingDND extends React.Component {
     this.setState({feelings: feelings}, () => {this.props.onChange(this.state.feelings)});
   }
 
-  onSubmit = () => {
+  onSubmit() {
     return this.state.feelings;
   }
 
@@ -50,9 +74,9 @@ class FeelingDND extends React.Component {
     this.state.feelings.forEach ((feeling) => {
       categories[feeling.category].push(
         <div key={feeling.name}
+          className="Draggable"
           onDragStart = {(event) => this.onDragStart(event, feeling.name)}
           draggable
-          // className="draggable" TODO make some style for this later
         >
           {feeling.name}
         </div>
@@ -60,12 +84,12 @@ class FeelingDND extends React.Component {
     });
 
     return (
-      <div className="drag-container">
+      <div>
         {Object.keys(categories).map((category, index) => {
           return <div className="Category"
             onDragOver={(event) => this.onDragOver(event)}
             onDrop={(event) => {this.onDrop(event, Object.getOwnPropertyNames(categories)[index])}}>
-            <span className="category-header">{Object.getOwnPropertyNames(categories)[index]}</span>
+            <span>{Object.getOwnPropertyNames(categories)[index]}</span>
             {categories[category]}
           </div>
         })}
@@ -73,5 +97,3 @@ class FeelingDND extends React.Component {
     );
   }
 }
-
-export default FeelingDND;

@@ -1,6 +1,10 @@
 .Category {
   float: left;
-  height: 300px;
+  height: 350px;
   width: 100px;
+  outline: 1px solid black;
+}
+
+.Draggable {
   outline: 1px solid black;
 }
