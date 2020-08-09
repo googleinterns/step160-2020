@@ -1,0 +1,6 @@
+.Category {
+  float: left;
+  height: 300px;
+  width: 100px;
+  outline: 1px solid black;
+}

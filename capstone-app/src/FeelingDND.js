@@ -1,6 +1,7 @@
 import React from 'react';
+import './FeelingDND.css';
 
-// TODO comments
+// TODO comments, class names for css should be caps first (check app.css)
 // source https://www.freecodecamp.org/news/reactjs-implement-drag-and-drop-feature-without-using-external-libraries-ad8994429f1a/
 class FeelingDND extends React.Component {
   state = {
@@ -57,7 +58,7 @@ class FeelingDND extends React.Component {
     return (
       <div className="drag-container">
         {Object.keys(categories).map((category, index) => {
-          return <div classname={Object.getOwnPropertyNames(categories)[index]}
+          return <div className="Category" // {Object.getOwnPropertyNames(categories)[index]}
             onDragOver={(event) => this.onDragOver(event)}
             onDrop={(event) => {this.onDrop(event, Object.getOwnPropertyNames(categories)[index])}}>
             <span className="category-header">{Object.getOwnPropertyNames(categories)[index]}</span>
