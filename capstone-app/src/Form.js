@@ -25,8 +25,14 @@ class Form extends React.Component {
   }
 
   handleSubmit(event) {
-    alert('The survey was submitted by: ' + this.state.user);
-    event.preventDefault();  // TODO make a post request
+    // alert('The survey was submitted by: ' + this.state.user);
+    // event.preventDefault();  // TODO make a post request
+    var xhr = new XMLHttpRequest();
+    xhr.addEventListener('load', () => {
+      console.log(xhr.responseText)
+    });
+    xhr.open('POST', 'ELEPHANT URL');
+    xhr.send(JSON.stringify({}));
   }
 
   render() {
