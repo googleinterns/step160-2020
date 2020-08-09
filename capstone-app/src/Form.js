@@ -1,6 +1,8 @@
 import React from 'react';
 import logo from './logo.svg';
 
+import FeelingDND from './FeelingDND';
+
 class Form extends React.Component {
   constructor(props) {
     super(props);
@@ -24,7 +26,7 @@ class Form extends React.Component {
 
   handleSubmit(event) {
     alert('The survey was submitted by: ' + this.state.user);
-    event.preventDefault();
+    event.preventDefault();  // TODO make a post request
   }
 
   render() {
@@ -51,7 +53,7 @@ class Form extends React.Component {
             <option value="">Select City</option>
           </select>
         </label>
-        
+        {<FeelingDND />}
         <input type="submit" value="Submit" />
       </form>
     );
