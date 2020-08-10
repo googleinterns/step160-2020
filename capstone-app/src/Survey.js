@@ -42,10 +42,6 @@ export default class Survey extends React.Component {
         }
     }
 
-    console.log('request body:');
-    console.log(requestBody.toString());
-    event.preventDefault();
-
     const request = new Request('https://manage-at-scale-step-2020.appspot.com/survey', {
         method: 'POST',
         body: requestBody
