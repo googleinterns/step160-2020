@@ -3,6 +3,10 @@ package com.google.sps.servlets;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.IncompleteKey;
+import com.google.cloud.datastore.Key;
+import com.google.cloud.datastore.KeyFactory;
+import com.google.cloud.datastore.PathElement;
 import com.google.cloud.datastore.ProjectionEntity;
 import com.google.cloud.datastore.StructuredQuery.OrderBy;
 import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
@@ -23,18 +27,48 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Class that handles incoming and outgoing PANAS survey responses.*/
+/** Class that handles incoming and outgoing PANAS survey responses. */
 @WebServlet("/survey")
 public class SurveyServlet extends HttpServlet {
 
-    @Override
+    @Override // TODO clean up all this code bro
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        throw new UnsupportedOperationException();
-    }
+        Map<String, String[]> parameters = new HashMap<>(request.getParameterMap());
+        String user = parameters.remove("user")[0];
+        long timestamp = System.currentTimeMillis();
+        String city = parameters.remove("city")[0];
+        String state = parameters.remove("state")[0];
+        String text = parameters.remove("text")[0];
 
-    @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        throw new UnsupportedOperationException();
+        Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+        IncompleteKey incompleteKey = datastore.newKeyFactory()
+            .addAncestors(PathElement.of("User", user))
+            .setKind("SurveyResponse")
+            .setProjectId("manage-at-scale-step-2020")
+            .newKey();
+        Key key = datastore.allocateId(incompleteKey);
+        Entity.Builder surveyResponseEntityBuilder = Entity.newBuilder(key)
+            .set("timestamp", timestamp)
+            .set("city", city)
+            .set("state", state)
+            .set("text", text);
+
+        Map<String, Integer> intensities = new HashMap<>();
+        intensities.put("verySlightly", 1);
+        intensities.put("aLitte", 2);
+        intensities.put("moderately", 3);
+        intensities.put("quiteABit", 4);
+        intensities.put("extremely", 5);
+        for (Map.Entry<String, String[]> entry : parameters.entrySet()) {
+            surveyResponseEntityBuilder.set(entry.getKey().toUpperCase(), intensities.get(entry.getValue()[0]));
+        }
+
+        Entity surveyResponseEntity = surveyResponseEntityBuilder.build();
+        datastore.add(surveyResponseEntity);
+
+        response.sendRedirect("/index.html");
+        System.out.println("Checking datastore:");
+        System.out.println(queryByUser("peter"));
     }
 
     /** 
