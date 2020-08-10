@@ -55,7 +55,7 @@ public class SurveyServlet extends HttpServlet {
 
         Map<String, Integer> intensities = new HashMap<>();
         intensities.put("verySlightly", 1);
-        intensities.put("aLitte", 2);
+        intensities.put("aLittle", 2);
         intensities.put("moderately", 3);
         intensities.put("quiteABit", 4);
         intensities.put("extremely", 5);
@@ -66,9 +66,13 @@ public class SurveyServlet extends HttpServlet {
         Entity surveyResponseEntity = surveyResponseEntityBuilder.build();
         datastore.add(surveyResponseEntity);
 
-        response.sendRedirect("/index.html");
-        System.out.println("Checking datastore:");
-        System.out.println(queryByUser("peter"));
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Methods","GET, OPTIONS, HEAD, PUT, POST");
+        response.setStatus(HttpServletResponse.SC_ACCEPTED);
+        response.setStatus(200);
+        // response.setContentType("text/html;");
+        // response.getWriter().println("Survey submitted!");
+        // response.sendRedirect("/index.html");
     }
 
     /** 

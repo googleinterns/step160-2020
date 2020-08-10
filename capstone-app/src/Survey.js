@@ -26,15 +26,6 @@ export default class Survey extends React.Component {
   }
 
   async handleSubmit(event) {
-    // var xhr = new XMLHttpRequest();
-    // xhr.addEventListener('load', () => {
-    //   console.log(xhr.responseText)
-    // });
-    // xhr.open('POST', 'http://localhost:8080/survey');
-    // xhr.send(JSON.stringify(this.state));
-    // console.log(JSON.stringify(this.state));
-    // event.preventDefault();
-
     var requestBody = new URLSearchParams();
 
     var property;
@@ -43,9 +34,7 @@ export default class Survey extends React.Component {
             requestBody.append(property, this.state[property]);
         } else {
             var feeling;
-            console.log(this.state[property]);
             for (feeling in this.state[property]) {
-                console.log(this.state[property][feeling].name);
                 if (this.state[property][feeling].category !== "pool") {
                     requestBody.append(this.state[property][feeling].name, this.state[property][feeling].category);
                 }
@@ -53,16 +42,16 @@ export default class Survey extends React.Component {
         }
     }
 
-    // console.log(requestBody);
+    console.log('request body:');
+    console.log(requestBody.toString());
     event.preventDefault();
 
-    const request = new Request('http://localhost:8080/survey', {
+    const request = new Request('https://manage-at-scale-step-2020.appspot.com/survey', {
         method: 'POST',
         body: requestBody
     });
 
-    fetch(request).then(response => { window.location.href = response.url; });
-    event.preventDefault();
+    fetch(request).then(response => console.log(response));
   }
 
   render() {
