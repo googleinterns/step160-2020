@@ -52,13 +52,6 @@ public class SurveyServlet extends HttpServlet {
             .set("state", state)
             .set("text", text);
 
-        // for (Map.Entry<String, String[]> entry : parameters.entrySet()) {
-        //     surveyResponseEntityBuilder.set(
-        //         entry.getKey().toUpperCase(), 
-        //         PanasIntensity.intensities.get(entry.getValue()[0])
-        //     );
-        // }
-
         for (PanasFeelings feeling : PanasFeelings.values()) {
             String intensity = request.getParameter(feeling.name());
             surveyResponseEntityBuilder.set(
@@ -76,13 +69,14 @@ public class SurveyServlet extends HttpServlet {
 
     /** 
     * Queries the project's DataStore and returns the set of {@code SurveyResponse} instances 
-    * that represent the survey responses containing {@code feeling}.
+    * that represent the survey responses containing {@code feeling} at an intensity greater 
+    * than 0 ("not at all" on the PANAS survey).
     */
     public static Set<SurveyResponse> queryByFeeling(PanasFeelings feeling) {
         Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
         Query<Entity> query = Query.newEntityQueryBuilder()
             .setKind("SurveyResponse")
-            .setFilter(PropertyFilter.ge(feeling.name(), 0))
+            .setFilter(PropertyFilter.gt(feeling.name(), 0))
             .build();
         QueryResults<Entity> queryResults = datastore.run(query);
 
@@ -120,20 +114,26 @@ public class SurveyServlet extends HttpServlet {
      * {@code SurveyResponse} instance.
      */
     private static SurveyResponse convertEntityToSurveyResponse(Entity entity) {
-        Set<String> allProperties = entity.getNames();
-        Set<String> knownProperties = new HashSet<>();
-        knownProperties.add("text");
-        knownProperties.add("city");
-        knownProperties.add("state");
-        knownProperties.add("timestamp");
+        // Set<String> allProperties = entity.getNames();
+        // Set<String> knownProperties = new HashSet<>();
+        // knownProperties.add("text");
+        // knownProperties.add("city");
+        // knownProperties.add("state");
+        // knownProperties.add("timestamp");
 
         Map<PanasFeelings, PanasIntensity> mutableFeelings = new HashMap<>();
-        for(String property : allProperties) {
-            if (!knownProperties.contains(property)) {
-                mutableFeelings.put(
-                    PanasFeelings.valueOf(property), 
-                    PanasIntensity.values[(int) entity.getLong(property)]);
-            }
+        // for(String property : allProperties) {
+        //     if (!knownProperties.contains(property)) {
+        //         mutableFeelings.put(
+        //             PanasFeelings.valueOf(property), 
+        //             PanasIntensity.values[(int) entity.getLong(property)]);
+        //     }
+        // }
+
+        for (PanasFeelings feeling : PanasFeelings.values()) {
+            mutableFeelings.put(
+                feeling, 
+                PanasIntensity.values[(int) entity.getLong(feeling.name())]);
         }
 
         ImmutableMap<PanasFeelings, PanasIntensity> feelings = ImmutableMap.copyOf(mutableFeelings);
@@ -151,8 +151,8 @@ public class SurveyServlet extends HttpServlet {
 
     /** 
     * Queries the project's DataStore and returns an ordered list of the three {@code PanasFeelings} 
-    * with the highest count included in survey responses, descending. Tie breaks are won by the 
-    * feeling included most recently in a survey response, and then alphabetically.
+    * with the highest count included in survey responses at an intensity greater than 0, descending. Tie
+    * breaks are won by the feeling included most recently in a survey response, and then alphabetically.
     */
     public static List<PanasFeelings> queryMostWidespread() {
         Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
@@ -163,6 +163,7 @@ public class SurveyServlet extends HttpServlet {
         for (PanasFeelings feeling : PanasFeelings.values()) {
             Query<ProjectionEntity> query = Query.newProjectionEntityQueryBuilder()
                 .setKind("SurveyResponse")
+                .setFilter(PropertyFilter.gt(feeling.name(), 0))
                 .setProjection(feeling.name(), "timestamp")
                 .build();
             QueryResults<ProjectionEntity> queryResults = datastore.run(query);
