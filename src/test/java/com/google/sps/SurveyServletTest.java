@@ -192,11 +192,6 @@ public class SurveyServletTest extends TestData {
             );
         }
 
-            // .set("JITTERY", fooFeelings.get(PanasFeelings.JITTERY).ordinal())
-            // .set("ALERT", fooFeelings.get(PanasFeelings.ALERT).ordinal())
-            // .set("UPSET", fooFeelings.get(PanasFeelings.UPSET).ordinal())
-            // .build();
-
         Entity fooEntity = fooEntityBuilder.build();
 
         final String barUser;
@@ -230,12 +225,6 @@ public class SurveyServletTest extends TestData {
             );
         }
 
-            // .set("JITTERY", barFeelings.get(PanasFeelings.JITTERY).ordinal())
-            // .set("ALERT", barFeelings.get(PanasFeelings.ALERT).ordinal())
-            // .set("AFRAID", barFeelings.get(PanasFeelings.AFRAID).ordinal())
-            // .set("NERVOUS", barFeelings.get(PanasFeelings.NERVOUS).ordinal())
-            // .build();
-
         Entity barEntity = barEntityBuilder.build();
 
         IncompleteKey bazIncompleteKey = datastore.newKeyFactory()
@@ -256,10 +245,6 @@ public class SurveyServletTest extends TestData {
                 bazFeelings.get(feeling).ordinal()
             );
         }
-        
-            // .set("ALERT", bazFeelings.get(PanasFeelings.ALERT).ordinal())
-            // .set("PROUD", bazFeelings.get(PanasFeelings.PROUD).ordinal())
-            // .build();
 
         Entity bazEntity = bazEntityBuilder.build();
 

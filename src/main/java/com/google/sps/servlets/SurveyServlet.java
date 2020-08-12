@@ -114,22 +114,7 @@ public class SurveyServlet extends HttpServlet {
      * {@code SurveyResponse} instance.
      */
     private static SurveyResponse convertEntityToSurveyResponse(Entity entity) {
-        // Set<String> allProperties = entity.getNames();
-        // Set<String> knownProperties = new HashSet<>();
-        // knownProperties.add("text");
-        // knownProperties.add("city");
-        // knownProperties.add("state");
-        // knownProperties.add("timestamp");
-
         Map<PanasFeelings, PanasIntensity> mutableFeelings = new HashMap<>();
-        // for(String property : allProperties) {
-        //     if (!knownProperties.contains(property)) {
-        //         mutableFeelings.put(
-        //             PanasFeelings.valueOf(property), 
-        //             PanasIntensity.values[(int) entity.getLong(property)]);
-        //     }
-        // }
-
         for (PanasFeelings feeling : PanasFeelings.values()) {
             mutableFeelings.put(
                 feeling, 
