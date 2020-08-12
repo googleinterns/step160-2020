@@ -31,14 +31,13 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/survey")
 public class SurveyServlet extends HttpServlet {
 
-    @Override // TODO clean up all this code bro
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Map<String, String[]> parameters = new HashMap<>(request.getParameterMap());
-        String user = parameters.remove("user")[0];
+        String user = request.getParameter("user");
         long timestamp = System.currentTimeMillis();
-        String city = parameters.remove("city")[0];
-        String state = parameters.remove("state")[0];
-        String text = parameters.remove("text")[0];
+        String city = request.getParameter("city");
+        String state = request.getParameter("state");
+        String text = request.getParameter("text");
 
         Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
         IncompleteKey incompleteKey = datastore.newKeyFactory()
@@ -53,26 +52,26 @@ public class SurveyServlet extends HttpServlet {
             .set("state", state)
             .set("text", text);
 
-        Map<String, Integer> intensities = new HashMap<>();
-        intensities.put("verySlightly", 1);
-        intensities.put("aLittle", 2);
-        intensities.put("moderately", 3);
-        intensities.put("quiteABit", 4);
-        intensities.put("extremely", 5);
-        for (Map.Entry<String, String[]> entry : parameters.entrySet()) {
-            surveyResponseEntityBuilder.set(entry.getKey().toUpperCase(), intensities.get(entry.getValue()[0]));
+        // for (Map.Entry<String, String[]> entry : parameters.entrySet()) {
+        //     surveyResponseEntityBuilder.set(
+        //         entry.getKey().toUpperCase(), 
+        //         PanasIntensity.intensities.get(entry.getValue()[0])
+        //     );
+        // }
+
+        for (PanasFeelings feeling : PanasFeelings.values()) {
+            String intensity = request.getParameter(feeling.name());
+            surveyResponseEntityBuilder.set(
+                feeling.name(),
+                PanasIntensity.valueOf(intensity).ordinal()
+            );
         }
 
         Entity surveyResponseEntity = surveyResponseEntityBuilder.build();
         datastore.add(surveyResponseEntity);
 
-        response.addHeader("Access-Control-Allow-Origin", "*");
-        response.addHeader("Access-Control-Allow-Methods","GET, OPTIONS, HEAD, PUT, POST");
-        response.setStatus(HttpServletResponse.SC_ACCEPTED);
-        response.setStatus(200);
-        // response.setContentType("text/html;");
-        // response.getWriter().println("Survey submitted!");
-        // response.sendRedirect("/index.html");
+        response.addHeader("Access-Control-Allow-Origin", "*");  // change to URL of React app once it's deployed
+        response.sendRedirect("/index.html");
     }
 
     /** 
@@ -131,7 +130,8 @@ public class SurveyServlet extends HttpServlet {
         Map<PanasFeelings, PanasIntensity> mutableFeelings = new HashMap<>();
         for(String property : allProperties) {
             if (!knownProperties.contains(property)) {
-                mutableFeelings.put(PanasFeelings.valueOf(property), 
+                mutableFeelings.put(
+                    PanasFeelings.valueOf(property), 
                     PanasIntensity.values[(int) entity.getLong(property)]);
             }
         }

@@ -12,26 +12,26 @@ export default class FeelingDND extends React.Component {
     super(props);
     this.state = {
       feelings: [
-        {name:"Interested", category:"pool"},
-        {name:"Distressed", category:"pool"},
-        {name:"Excited", category:"pool"},
-        {name:"Upset", category:"pool"},
-        {name:"Strong", category:"pool"},
-        {name:"Guilty", category:"pool"},
-        {name:"Scared", category:"pool"},
-        {name:"Hostile", category:"pool"},
-        {name:"Enthusiastic", category:"pool"},
-        {name:"Proud", category:"pool"},
-        {name:"Irritable", category:"pool"},
-        {name:"Alert", category:"pool"},
-        {name:"Ashamed", category:"pool"},
-        {name:"Inspired", category:"pool"},
-        {name:"Nervous", category:"pool"},
-        {name:"Determined", category:"pool"},
-        {name:"Attentive", category:"pool"},
-        {name:"Jittery", category:"pool"},
-        {name:"Active", category:"pool"},
-        {name:"Afraid", category:"pool"},
+        {name:"Interested", category:"NOT_AT_ALL"},
+        {name:"Distressed", category:"NOT_AT_ALL"},
+        {name:"Excited", category:"NOT_AT_ALL"},
+        {name:"Upset", category:"NOT_AT_ALL"},
+        {name:"Strong", category:"NOT_AT_ALL"},
+        {name:"Guilty", category:"NOT_AT_ALL"},
+        {name:"Scared", category:"NOT_AT_ALL"},
+        {name:"Hostile", category:"NOT_AT_ALL"},
+        {name:"Enthusiastic", category:"NOT_AT_ALL"},
+        {name:"Proud", category:"NOT_AT_ALL"},
+        {name:"Irritable", category:"NOT_AT_ALL"},
+        {name:"Alert", category:"NOT_AT_ALL"},
+        {name:"Ashamed", category:"NOT_AT_ALL"},
+        {name:"Inspired", category:"NOT_AT_ALL"},
+        {name:"Nervous", category:"NOT_AT_ALL"},
+        {name:"Determined", category:"NOT_AT_ALL"},
+        {name:"Attentive", category:"NOT_AT_ALL"},
+        {name:"Jittery", category:"NOT_AT_ALL"},
+        {name:"Active", category:"NOT_AT_ALL"},
+        {name:"Afraid", category:"NOT_AT_ALL"},
       ]
     };
   }
@@ -59,16 +59,16 @@ export default class FeelingDND extends React.Component {
 
   render() {
     var categories = {
-      pool: [],
-      verySlightly: [],
-      aLittle: [],
-      moderately: [],
-      quiteABit: [],
-      extremely: []
+      NOT_AT_ALL: {pool: [], pretty_name: "Drag from below:"},
+      VERY_SLIGHTLY: {pool: [], pretty_name: "Very Slightly"},
+      A_LITTLE: {pool: [], pretty_name: "A Little"},
+      MODERATELY: {pool: [], pretty_name: "Moderately"},
+      QUITE_A_BIT: {pool: [], pretty_name: "Quite A Bit"},
+      EXTREMELY: {pool: [], pretty_name: "Extremely"}
     }
 
     this.state.feelings.forEach ((feeling) => {
-      categories[feeling.category].push(
+      categories[feeling.category].pool.push(
         <div key={feeling.name}
           className="Draggable"
           onDragStart = {(event) => this.onDragStart(event, feeling.name)}
@@ -85,8 +85,8 @@ export default class FeelingDND extends React.Component {
           return <div className="Category"
             onDragOver={(event) => this.onDragOver(event)}
             onDrop={(event) => {this.onDrop(event, Object.getOwnPropertyNames(categories)[index])}}>
-            <span>{Object.getOwnPropertyNames(categories)[index]}</span>
-            {categories[category]}
+            <span>{categories[category].pretty_name}</span>
+            {categories[category].pool}
           </div>
         })}
       </div>

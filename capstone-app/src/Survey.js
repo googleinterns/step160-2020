@@ -21,7 +21,7 @@ export default class Survey extends React.Component {
 
   handleChange(event) {
     let name = event.target.name;
-    let val = this.sanitize(event.target.value);
+    let val = event.target.value;
     this.setState({[name]: val});
   }
 
@@ -47,21 +47,21 @@ export default class Survey extends React.Component {
 
     var property;
     for (property of Object.getOwnPropertyNames(this.state)) {
-        if (property !== 'feelings') {
-            requestBody.append(property, this.state[property]);
-        } else {
-            var feeling;
-            for (feeling in this.state[property]) {
-                if (this.state[property][feeling].category !== "pool") {
-                  requestBody.append(this.state[property][feeling].name, this.state[property][feeling].category);
-                }
-            }
+      if (property !== 'feelings') {
+        requestBody.append(property, this.sanitize(this.state[property]));
+      } else {
+        var feeling;
+        for (feeling in this.state[property]) {
+          requestBody.append(
+              this.state[property][feeling].name.toUpperCase(),
+              this.state[property][feeling].category);
         }
+      }
     }
 
     const request = new Request('https://manage-at-scale-step-2020.appspot.com/survey', {
-        method: 'POST',
-        body: requestBody
+      method: 'POST',
+      body: requestBody
     });
 
     fetch(request).then(response => console.log(response));
