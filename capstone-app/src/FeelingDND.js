@@ -57,10 +57,6 @@ export default class FeelingDND extends React.Component {
     this.setState({feelings: feelings}, () => {this.props.onChange(this.state.feelings)});
   }
 
-  onSubmit() {
-    return this.state.feelings;
-  }
-
   render() {
     var categories = {
       pool: [],
