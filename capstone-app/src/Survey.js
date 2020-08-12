@@ -21,11 +21,28 @@ export default class Survey extends React.Component {
 
   handleChange(event) {
     let name = event.target.name;
-    let val = event.target.value;
+    let val = this.sanitize(event.target.value);
     this.setState({[name]: val});
   }
 
-  async handleSubmit(event) {
+  /**
+   * Source:
+   * https://stackoverflow.com/questions/2794137/sanitizing-user-input-before-adding-it-to-the-dom-in-javascript
+   */
+  sanitize(string) {
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#x27;',
+      "/": '&#x2F;',
+    };
+    const regex = /[&<>"'/]/ig;
+    return string.replace(regex, (match)=>(map[match]));
+  }
+
+  async handleSubmit() {
     var requestBody = new URLSearchParams();
 
     var property;
