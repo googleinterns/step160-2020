@@ -36,15 +36,18 @@ export default class FeelingDND extends React.Component {
     };
   }
 
+  /** Initiates transfer of data when object is dragged. */
   onDragStart(event, name) {
     console.log('dragstart: ', name);
     event.dataTransfer.setData("id", name);
   }
 
+  /** Allows objects to be dragged over each other. */
   onDragOver(event) {
     event.preventDefault();
   }
 
+  /** Updates object category when dropped. */
   onDrop (event, category) {
     let id = event.dataTransfer.getData("id");
     let feelings = this.state.feelings.filter((feeling) => {

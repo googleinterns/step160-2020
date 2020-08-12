@@ -19,6 +19,7 @@ export default class Survey extends React.Component {
     this.feelingUpdateHandler = feelings => this.setState({feelings: feelings});
   }
 
+  /** Updates the component's state when given user input. */
   handleChange(event) {
     let name = event.target.name;
     let val = event.target.value;
@@ -26,6 +27,8 @@ export default class Survey extends React.Component {
   }
 
   /**
+   * Sanitizes the given string using HTML encoding.
+   * 
    * Source:
    * https://stackoverflow.com/questions/2794137/sanitizing-user-input-before-adding-it-to-the-dom-in-javascript
    */
@@ -42,6 +45,7 @@ export default class Survey extends React.Component {
     return string.replace(regex, (match)=>(map[match]));
   }
 
+  /** Sends a POST request to the backend containing the survey response. */
   async handleSubmit() {
     var requestBody = new URLSearchParams();
 
