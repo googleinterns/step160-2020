@@ -15,7 +15,7 @@ import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Button from "components/CustomButtons/Button.js";
 
-import styles from "assets/jss/material-kit-react/views/componentsSections/javascriptStyles.js";
+import styles from "assets/jss/material-kit-react/javascriptStyles.js";
 
 const useStyles = makeStyles(styles);
 
@@ -34,7 +34,7 @@ export default function SectionModal() {
       <div className={classes.container}>
         
         <GridContainer>
-          <GridItem xs={6} sm={6} md={6} lg={6} xl={6}>
+          <GridItem xs={8} sm={8} md={8} lg={8} xl={8}>
             
             <GridContainer>
               <GridItem xs={6} sm={6} md={6} lg={6} xl={6}>
