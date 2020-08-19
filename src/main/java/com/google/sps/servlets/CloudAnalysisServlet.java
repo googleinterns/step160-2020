@@ -1,7 +1,5 @@
 package com.google.sps.servlets;
 
-
-
 import com.google.cloud.language.v1.AnalyzeEntitiesRequest;
 import com.google.cloud.language.v1.AnalyzeEntitiesResponse;
 import com.google.cloud.language.v1.AnalyzeEntitySentimentRequest;
@@ -37,16 +35,18 @@ public class CloudAnalysisServlet extends HttpServlet {
 
     Document doc = Document.newBuilder().setContent(message).setType(Document.Type.PLAIN_TEXT).build();
     LanguageServiceClient languageService = LanguageServiceClient.create();
-
+    // sentiment analysis 
     Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+    // sentiment score
     float score = sentiment.getScore();
 
+    //entity analysis
     AnalyzeEntitiesRequest requestEntity =
         AnalyzeEntitiesRequest.newBuilder()
             .setDocument(doc)
             .setEncodingType(EncodingType.UTF16)
             .build();
-
+    // entity list
     AnalyzeEntitiesResponse response1 = languageService.analyzeEntities(requestEntity);
 
     languageService.close();
@@ -72,9 +72,6 @@ public class CloudAnalysisServlet extends HttpServlet {
         }
 
     }
-
-    
-
 
   }
 }

@@ -39,12 +39,12 @@ export default function SectionModal() {
             <GridContainer>
               <GridItem xs={6} sm={6} md={6} lg={6} xl={6}>
                 <Button
-                  color="primary"
+                  color="info"
                   block
                   onClick={() => setClassicModal(true)}
                 >
                   <LibraryBooks className={classes.icon} />
-                  Classic
+                  How are you feeling?
                 </Button>
                 <Dialog
                   classes={{

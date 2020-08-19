@@ -23,7 +23,7 @@ export default function SectionNavbar() {
       </div>
       <div id="navbar" className={classes.navbar}>
           <Header
-            brand="Capstone Project"
+            brand="Eleos"
             color="primary"
             rightLinks={
               <List className={classes.list}>

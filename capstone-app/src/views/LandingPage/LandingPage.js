@@ -17,7 +17,7 @@ import styles from "assets/jss/material-kit-react/views/landingPage.js";
 // Sections for this page
 import ProductSection from "./Sections/ProductSection.js";
 import SectionModal from "./Sections/SectionModal.js";
-import SectionNavbar from "./Sections/SectionNavbar.js";
+import SectionNavbar from "./Sections/SectionNavbarSignup.js";
 
 const dashboardRoutes = [];
 
@@ -34,9 +34,9 @@ export default function LandingPage(props) {
         <div className={classes.container}>
           <GridContainer >
             <GridItem xs={6} sm={6} md={6} lg={6} xl={6} >
-              <h1 className={classes.title}>*insert cute phrase*</h1>
+              <h1 className={classes.title}>Feelings of the World</h1>
               <h4>
-               *insert short explanation*
+               insert explanation
               </h4>
               
               <br />
