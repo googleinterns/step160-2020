@@ -7,7 +7,28 @@ export default class Survey extends React.Component {
     super(props);
     this.state = {
       user: '',
-      feelings: [],
+      feelings: [
+        {name:"Interested", category:"NOT_AT_ALL"},
+        {name:"Distressed", category:"NOT_AT_ALL"},
+        {name:"Excited", category:"NOT_AT_ALL"},
+        {name:"Upset", category:"NOT_AT_ALL"},
+        {name:"Strong", category:"NOT_AT_ALL"},
+        {name:"Guilty", category:"NOT_AT_ALL"},
+        {name:"Scared", category:"NOT_AT_ALL"},
+        {name:"Hostile", category:"NOT_AT_ALL"},
+        {name:"Enthusiastic", category:"NOT_AT_ALL"},
+        {name:"Proud", category:"NOT_AT_ALL"},
+        {name:"Irritable", category:"NOT_AT_ALL"},
+        {name:"Alert", category:"NOT_AT_ALL"},
+        {name:"Ashamed", category:"NOT_AT_ALL"},
+        {name:"Inspired", category:"NOT_AT_ALL"},
+        {name:"Nervous", category:"NOT_AT_ALL"},
+        {name:"Determined", category:"NOT_AT_ALL"},
+        {name:"Attentive", category:"NOT_AT_ALL"},
+        {name:"Jittery", category:"NOT_AT_ALL"},
+        {name:"Active", category:"NOT_AT_ALL"},
+        {name:"Afraid", category:"NOT_AT_ALL"},
+      ],
       text: '',
       city: '',
       state: '',
@@ -15,8 +36,9 @@ export default class Survey extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.onDrop = this.onDrop.bind(this);
 
-    this.feelingUpdateHandler = feelings => this.setState({feelings: feelings});
+    // this.feelingUpdateHandler = feelings => this.setState({feelings: feelings}); // TODO check out what this thing does
   }
 
   /** Updates the component's state when given user input. */
@@ -24,25 +46,6 @@ export default class Survey extends React.Component {
     let name = event.target.name;
     let val = event.target.value;
     this.setState({[name]: val});
-  }
-
-  /**
-   * Sanitizes the given string using HTML encoding.
-   * 
-   * Source:
-   * https://stackoverflow.com/questions/2794137/sanitizing-user-input-before-adding-it-to-the-dom-in-javascript
-   */
-  sanitize(string) {
-    const map = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#x27;',
-      "/": '&#x2F;',
-    };
-    const regex = /[&<>"'/]/ig;
-    return string.replace(regex, (match)=>(map[match]));
   }
 
   /** Sends a POST request to the backend containing the survey response. */
@@ -71,6 +74,49 @@ export default class Survey extends React.Component {
     fetch(request).then(response => console.log(response));
   }
 
+  /**
+   * Sanitizes the given string using HTML encoding.
+   * 
+   * Source:
+   * https://stackoverflow.com/questions/2794137/sanitizing-user-input-before-adding-it-to-the-dom-in-javascript
+   */
+  sanitize(string) {
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#x27;',
+      "/": '&#x2F;',
+    };
+    const regex = /[&<>"'/]/ig;
+    return string.replace(regex, (match)=>(map[match]));
+  }
+
+  /** Initiates transfer of data when an object is dragged. */
+  onDragStart(event, name) {
+    console.log('dragstart: ', name);
+    event.dataTransfer.setData("id", name);
+  }
+
+  /** Allows objects to be dragged over each other. */
+  onDragOver(event) {
+    event.preventDefault();
+  }
+
+  /** Updates an object's category when dropped. */
+  onDrop (event, category) {
+    let id = event.dataTransfer.getData("id");
+    let feelings = this.state.feelings.filter((feeling) => {
+      if (feeling.name === id) {
+        feeling.category = category;
+      }
+      return feeling;
+    });
+
+    this.setState({feelings: feelings});
+  }
+
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
@@ -82,7 +128,6 @@ export default class Survey extends React.Component {
           Text:
           <input type="text" name="text" value={this.state.text} onChange={this.handleChange} />
         </label>
-
         <input type="hidden" name="country" id="countryId" value="US"/>
         <label>
           State:
@@ -96,7 +141,13 @@ export default class Survey extends React.Component {
             <option value="">Select City</option>
           </select>
         </label>
-        {<FeelingDND onChange={this.feelingUpdateHandler}/>}
+        {<FeelingDND 
+          feelings={this.state.feelings}
+          // onChange={this.feelingUpdateHandler}  // TODO check this thing too
+          onDragStart={this.onDragStart}
+          onDragOver={this.onDragOver}
+          onDrop={this.onDrop}
+        />}
         <input type="submit" value="Submit" />
       </form>
     );
