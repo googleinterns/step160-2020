@@ -37,8 +37,6 @@ export default class Survey extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onDrop = this.onDrop.bind(this);
-
-    // this.feelingUpdateHandler = feelings => this.setState({feelings: feelings}); // TODO check out what this thing does
   }
 
   /** Updates the component's state when given user input. */
@@ -143,7 +141,6 @@ export default class Survey extends React.Component {
         </label>
         {<FeelingDND 
           feelings={this.state.feelings}
-          // onChange={this.feelingUpdateHandler}  // TODO check this thing too
           onDragStart={this.onDragStart}
           onDragOver={this.onDragOver}
           onDrop={this.onDrop}
