@@ -17,7 +17,7 @@ import styles from "assets/jss/material-kit-react/views/landingPage.js";
 // Sections for this page
 import ProductSection from "./Sections/ProductSection.js";
 import SectionModal from "./Sections/SectionModal.js";
-import SectionNavbar from "./Sections/SectionNavbarSignup.js";
+import SectionNavbarSignup from "./Sections/SectionNavbarSignup.js";
 
 const dashboardRoutes = [];
 
@@ -29,7 +29,7 @@ export default function LandingPage(props) {
   return (
     <div>
      
-      <SectionNavbar />
+      <SectionNavbarSignup />
       <Parallax filter image={require("assets/img/landing-bg.jpg")}>
         <div className={classes.container}>
           <GridContainer >
