@@ -3,8 +3,9 @@ import React from "react";
 import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+import TextField from '@material-ui/core/TextField';
+
 // @material-ui/icons
-import Camera from "@material-ui/icons/Camera";
 import Palette from "@material-ui/icons/Palette";
 import Favorite from "@material-ui/icons/Favorite";
 import LibraryBooksSharpIcon from '@material-ui/icons/LibraryBooksSharp';
@@ -12,6 +13,9 @@ import LibraryBooksSharpIcon from '@material-ui/icons/LibraryBooksSharp';
 import Header from "components/Header/Header.js";
 import Footer from "components/Footer/Footer.js";
 import Button from "components/CustomButtons/Button.js";
+import Card from "components/Card/Card.js";
+
+import CustomInput from "components/CustomInput/CustomInput.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import HeaderLinks from "components/Header/HeaderLinks.js";
@@ -61,76 +65,53 @@ export default function ProfilePage(props) {
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div>
           <div className={classes.container}>
-            <GridContainer justify="center">
-              <GridItem xs={12} sm={12} md={6}>
-                <div className={classes.profile}>
-                  <div>
-                    <img src={profile} alt="..." className={imageClasses} />
-                  </div>
-                  <div className={classes.name}>
-                    <h3 className={classes.title}>Christian Louboutin</h3>
-                    <h6>DESIGNER</h6>
-                    <Button justIcon link className={classes.margin5}>
-                      <i className={"fab fa-twitter"} />
-                    </Button>
-                    <Button justIcon link className={classes.margin5}>
-                      <i className={"fab fa-instagram"} />
-                    </Button>
-                    <Button justIcon link className={classes.margin5}>
-                      <i className={"fab fa-facebook"} />
-                    </Button>
-                  </div>
-                </div>
-              </GridItem>
-            </GridContainer>
-            <div className={classes.description}>
-              <p>
-                An artist of considerable range, Chet Faker — the name taken by
-                Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs
-                and records all of his own music, giving it a warm, intimate
-                feel with a solid groove structure.{" "}
-              </p>
-            </div>
+            
             <GridContainer justify="center">
               <GridItem xs={12} sm={12} md={8} className={classes.navWrapper}>
                 <NavPills
-                  alignCenter
-                  color="primary"
+                color="info"
+                horizontal={{
+                  tabsGrid: { xs: 12, sm: 4, md: 4 },
+                  contentGrid: { xs: 12, sm: 8, md: 8 }
+                }}
                   tabs={[
                     {
                       tabButton: "Journal",
                       tabIcon: LibraryBooksSharpIcon,
                       tabContent: (
-                        <GridContainer justify="center">
-                          <GridItem xs={12} sm={12} md={4}>
-                            <img
-                              alt="..."
-                              src={studio1}
-                              className={navImageClasses}
-                            />
-                            <img
-                              alt="..."
-                              src={studio2}
-                              className={navImageClasses}
-                            />
-                          </GridItem>
-                          <GridItem xs={12} sm={12} md={4}>
-                            <img
-                              alt="..."
-                              src={studio5}
-                              className={navImageClasses}
-                            />
-                            <img
-                              alt="..."
-                              src={studio4}
-                              className={navImageClasses}
-                            />
-                          </GridItem>
+                        <GridContainer spacing={4} justify="center">
+                        <GridItem >
+           <form >
+                  <TextField 
+                            required id="standard-required"
+                            id="journal-title"
+                            label="Title"
+                            style = {{width: '100%'}}
+                            margin="normal"
+                            />
+
+                          <TextField
+                            id="journal-text"
+                            label="Journal"
+                            multiline
+                            rows={30}
+                            variant="outlined"
+                            margin="normal"
+                            style ={{width: '100%'}}
+
+                            />
+                    
+                    <Button simple color="info" size="lg">
+                      Submit
+                      </Button>
+                  
+                </form>
+            </GridItem>
                         </GridContainer>
                       )
                     },
                     {
-                      tabButton: "Work",
+                      tabButton: "Responses",
                       tabIcon: Palette,
                       tabContent: (
                         <GridContainer justify="center">
@@ -167,7 +148,7 @@ export default function ProfilePage(props) {
                       )
                     },
                     {
-                      tabButton: "Favorite",
+                      tabButton: "Analysis",
                       tabIcon: Favorite,
                       tabContent: (
                         <GridContainer justify="center">
