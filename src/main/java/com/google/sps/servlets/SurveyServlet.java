@@ -64,7 +64,7 @@ public class SurveyServlet extends HttpServlet {
         datastore.add(surveyResponseEntity);
 
         response.addHeader("Access-Control-Allow-Origin", "*");  // change to URL of React app once it's deployed
-        response.sendRedirect("/index.html");
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     /** 
