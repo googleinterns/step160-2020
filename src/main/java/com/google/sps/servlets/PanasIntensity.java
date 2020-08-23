@@ -1,8 +1,5 @@
 package com.google.sps.servlets;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Feeling intensities on the PANAS emotional survey.
  *
