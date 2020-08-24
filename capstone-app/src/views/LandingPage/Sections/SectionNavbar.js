@@ -1,5 +1,6 @@
 import React from "react";
 // @material-ui/core components
+import GoogleBtn from "../../../GoogleBtn";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -43,16 +44,6 @@ export default function SectionNavbar() {
                 <ListItem className={classes.listItem}>
                   <Button
                     href="#pablo"
-                    className={classes.navLink + " " + classes.navLinkActive}
-                    onClick={e => e.preventDefault()}
-                    color="transparent"
-                  >
-                    <Explore className={classes.icons} /> Discover
-                  </Button>
-                </ListItem>
-                <ListItem className={classes.listItem}>
-                  <Button
-                    href="#pablo"
                     className={classes.navLink}
                     onClick={e => e.preventDefault()}
                     color="transparent"
@@ -61,14 +52,7 @@ export default function SectionNavbar() {
                   </Button>
                 </ListItem>
                 <ListItem className={classes.listItem}>
-                  <Button
-                    href="#pablo"
-                    className={classes.navLink}
-                    onClick={e => e.preventDefault()}
-                    color="transparent"
-                  >
-                    <Icon className={classes.icons}>settings</Icon> Settings
-                  </Button>
+                  <GoogleBtn />
                 </ListItem>
               </List>
             }
