@@ -1,0 +1,6 @@
+indexes:
+- kind: SurveyResponse
+  ancestor: yes
+  properties:
+  - name: timestamp
+    direction: desc
