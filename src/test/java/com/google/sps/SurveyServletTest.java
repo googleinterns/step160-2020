@@ -156,8 +156,8 @@ public class SurveyServletTest extends TestData {
     public void testQueryMostIntense() {
         loadTestData(false);
         List<PanasFeelings> expected = new ArrayList<>();
-        expected.add(PanasFeelings.JITTERY);
         expected.add(PanasFeelings.ALERT);
+        expected.add(PanasFeelings.JITTERY);
         expected.add(PanasFeelings.AFRAID);
         assertEquals(expected, SurveyServlet.queryMostIntense());
     }
@@ -179,15 +179,20 @@ public class SurveyServletTest extends TestData {
             .setProjectId("manage-at-scale-step-2020")
             .newKey();
         Key fooKey = datastore.allocateId(fooIncompleteKey);
-        Entity fooEntity = Entity.newBuilder(fooKey)
+        Entity.Builder fooEntityBuilder = Entity.newBuilder(fooKey)
             .set("timestamp", fooTimestamp)
             .set("city", fooCity)
             .set("state", fooState)
-            .set("text", fooText)
-            .set("JITTERY", fooFeelings.get(PanasFeelings.JITTERY).ordinal())
-            .set("ALERT", fooFeelings.get(PanasFeelings.ALERT).ordinal())
-            .set("UPSET", fooFeelings.get(PanasFeelings.UPSET).ordinal())
-            .build();
+            .set("text", fooText);
+
+        for (PanasFeelings feeling : PanasFeelings.values()) {
+            fooEntityBuilder.set(
+                feeling.name(),
+                fooFeelings.get(feeling).ordinal()
+            );
+        }
+
+        Entity fooEntity = fooEntityBuilder.build();
 
         final String barUser;
         final String bazUser;
@@ -207,16 +212,20 @@ public class SurveyServletTest extends TestData {
             .setProjectId("manage-at-scale-step-2020")
             .newKey();
         Key barKey = datastore.allocateId(barIncompleteKey);
-        Entity barEntity = Entity.newBuilder(barKey)
+        Entity.Builder barEntityBuilder = Entity.newBuilder(barKey)
             .set("timestamp", barTimestamp)
             .set("city", barCity)
             .set("state", barState)
-            .set("text", barText)
-            .set("JITTERY", barFeelings.get(PanasFeelings.JITTERY).ordinal())
-            .set("ALERT", barFeelings.get(PanasFeelings.ALERT).ordinal())
-            .set("AFRAID", barFeelings.get(PanasFeelings.AFRAID).ordinal())
-            .set("NERVOUS", barFeelings.get(PanasFeelings.NERVOUS).ordinal())
-            .build();
+            .set("text", barText);
+
+        for (PanasFeelings feeling : PanasFeelings.values()) {
+            barEntityBuilder.set(
+                feeling.name(),
+                barFeelings.get(feeling).ordinal()
+            );
+        }
+
+        Entity barEntity = barEntityBuilder.build();
 
         IncompleteKey bazIncompleteKey = datastore.newKeyFactory()
             .addAncestors(PathElement.of("User", bazUser))
@@ -224,14 +233,20 @@ public class SurveyServletTest extends TestData {
             .setProjectId("manage-at-scale-step-2020")
             .newKey();
         Key bazKey = datastore.allocateId(bazIncompleteKey);
-        Entity bazEntity = Entity.newBuilder(bazKey)
+        Entity.Builder bazEntityBuilder = Entity.newBuilder(bazKey)
             .set("timestamp", bazTimestamp)
             .set("city", bazCity)
             .set("state", bazState)
-            .set("text", bazText)
-            .set("ALERT", bazFeelings.get(PanasFeelings.ALERT).ordinal())
-            .set("PROUD", bazFeelings.get(PanasFeelings.PROUD).ordinal())
-            .build();
+            .set("text", bazText);
+
+        for (PanasFeelings feeling : PanasFeelings.values()) {
+            bazEntityBuilder.set(
+                feeling.name(),
+                bazFeelings.get(feeling).ordinal()
+            );
+        }
+
+        Entity bazEntity = bazEntityBuilder.build();
 
         datastore.add(fooEntity, barEntity, bazEntity);
     }
