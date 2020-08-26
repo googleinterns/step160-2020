@@ -4,3 +4,84 @@ indexes:
   properties:
   - name: timestamp
     direction: desc
+
+- kind: SurveyResponse
+  properties:
+  - name: INTERESTED
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: DISTRESSED
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: EXCITED
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: UPSET
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: STRONG
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: GUILTY
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: SCARED
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: HOSTILE
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: ENTHUSIASTIC
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: PROUD
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: IRRITABLE
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: ALERT
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: ASHAMED
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: INSPIRED
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: NERVOUS
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: DETERMINED
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: ATTENTIVE
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: JITTERY
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: ACTIVE
+  - name: timestamp
+- kind: SurveyResponse
+  properties:
+  - name: AFRAID
+  - name: timestamp
