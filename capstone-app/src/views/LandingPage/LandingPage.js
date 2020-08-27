@@ -3,35 +3,26 @@ import React from "react";
 import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-
 // @material-ui/icons
 
 // core components
-import Header from "components/Header/Header.js";
 import Footer from "components/Footer/Footer.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import Button from "components/CustomButtons/Button.js";
-import HeaderLinks from "components/Header/HeaderLinks.js";
 import Parallax from "components/Parallax/Parallax.js";
 
 import styles from "assets/jss/material-kit-react/views/landingPage.js";
 
 // Sections for this page
 import ProductSection from "./Sections/ProductSection.js";
-// import TeamSection from "./Sections/TeamSection.js";
-import WorkSection from "./Sections/WorkSection.js";
 import SectionModal from "./Sections/SectionModal.js";
-import SectionMap from "./Sections/SectionMap.js";
 import SectionNavbar from "./Sections/SectionNavbar.js";
-
-const dashboardRoutes = [];
 
 const useStyles = makeStyles(styles);
 
 export default function LandingPage(props) {
   const classes = useStyles();
-  const { ...rest } = props;
+
   return (
     <div>
      
@@ -40,13 +31,13 @@ export default function LandingPage(props) {
         <div className={classes.container}>
           <GridContainer >
             <GridItem xs={6} sm={6} md={6} lg={6} xl={6} >
-              <h1 className={classes.title}>*insert cute phrase*</h1>
+              <h1 className={classes.title}>Feelings of the World</h1>
               <h4>
-               *insert short explanation*
+               insert explanation
               </h4>
               
               <br />
-              <SectionModal />
+              <SectionModal width="80%"/>
               
             </GridItem>
 
@@ -57,9 +48,6 @@ export default function LandingPage(props) {
             </GridItem>
 
           </GridContainer>
-
-         
-          
 
         </div>
       </Parallax>
@@ -74,4 +62,3 @@ export default function LandingPage(props) {
     </div>
   );
 }
-
