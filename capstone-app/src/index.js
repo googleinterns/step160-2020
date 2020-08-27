@@ -1,6 +1,7 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
 import * as serviceWorker from './serviceWorker';
-import React from "react";
-import ReactDOM from "react-dom";
 import { createBrowserHistory } from "history";
 import { Router, Route, Switch } from "react-router-dom";
 
@@ -12,7 +13,6 @@ import LandingPage from "./views/LandingPage/LandingPage.js";
 import ProfilePage from "./views/ProfilePage/ProfilePage.js";
 import LoginPage from "./views/LoginPage/LoginPage.js";
 import SignupPage from "./views/SignupPage/SignupPage.js";
-
 
 var hist = createBrowserHistory();
 serviceWorker.unregister();

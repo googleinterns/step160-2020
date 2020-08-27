@@ -49,6 +49,12 @@ public class TestData {
         bazMutableFeelings.put(PanasFeelings.ALERT, PanasIntensity.QUITE_A_BIT);
         bazMutableFeelings.put(PanasFeelings.PROUD, PanasIntensity.QUITE_A_BIT);
 
+        for (PanasFeelings feeling : PanasFeelings.values()) {
+            fooMutableFeelings.putIfAbsent(feeling, PanasIntensity.NOT_AT_ALL);
+            barMutableFeelings.putIfAbsent(feeling, PanasIntensity.NOT_AT_ALL);
+            bazMutableFeelings.putIfAbsent(feeling, PanasIntensity.NOT_AT_ALL);
+        }
+
         fooFeelings = ImmutableMap.copyOf(fooMutableFeelings); 
         barFeelings = ImmutableMap.copyOf(barMutableFeelings); 
         bazFeelings = ImmutableMap.copyOf(bazMutableFeelings);

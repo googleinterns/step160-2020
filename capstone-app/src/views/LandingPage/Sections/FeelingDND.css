@@ -1,0 +1,25 @@
+.Pool {
+  width: 100%;
+  outline: 1px solid black;
+}
+
+.Category {
+  height: 350px;
+  width: 20%;
+  outline: 1px solid black;
+  margin: auto;
+}
+
+.Categories {
+  width: 100%;
+  display: flex;
+  float: none;
+}
+
+.Draggable {
+  outline: 1px solid black;
+  padding: 10px;
+  width: 100px;
+  text-align: center;
+  float: left;
+}
