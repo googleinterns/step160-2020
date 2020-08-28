@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from 'react-router-dom';
+
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
@@ -24,7 +26,7 @@ export default function SectionNavbar() {
       <div id="navbar" className={classes.navbar}>
           <Header
             brand="Eleos"
-            color="primary"
+            color="info"
             rightLinks={
               <List className={classes.list}>
                 <ListItem className={classes.listItem}>
@@ -44,7 +46,11 @@ export default function SectionNavbar() {
                     onClick={e => e.preventDefault()}
                     color="transparent"
                   >
-                    <AccountCircle className={classes.icons} /> Profile
+                    <AccountCircle className={classes.icons} /> 
+                    <Link to="/profile-page" className={classes.link}>
+                    Profile                    
+                    </Link>
+
                   </Button>
                 </ListItem>
                 <ListItem className={classes.listItem}>
