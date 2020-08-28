@@ -7,7 +7,7 @@ import React from 'react';
 
 import styles from "assets/jss/material-kit-react/javascriptStyles.js";
 
-/** Survey component to collect PANAS survey data. */
+/** journal component that records title and journal text */
 export default class Journal extends React.Component {
   constructor(props) {
     super(props);
@@ -22,14 +22,14 @@ export default class Journal extends React.Component {
     
   }
 
-  /** Updates the component's state when given user input. */
+  /** updates when the user adds text */
   handleChange(event) {
     let name = event.target.name;
     let val = event.target.value;
     this.setState({[name]: val});
   }
 
-  /** Sends a POST request to the backend containing the survey response. */
+  /** sends journal title and text to the backend */
   async handleSubmit() {
     var requestBody = new URLSearchParams();
 
