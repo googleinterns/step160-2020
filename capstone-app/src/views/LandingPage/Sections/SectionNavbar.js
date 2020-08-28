@@ -10,7 +10,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import Header from "components/Header/Header.js";
 import Button from "components/CustomButtons/Button.js";
 
-import styles from "assets/jss/material-kit-react/views/componentsSections/navbarsStyle.js";
+import styles from "assets/jss/material-kit-react/navbarsStyle.js";
 
 const useStyles = makeStyles(styles);
 
@@ -34,7 +34,7 @@ export default function SectionNavbar() {
         
 
             <Header
-              brand="Capstone Project"
+              brand="Eleos"
               color="primary"
               rightLinks={
                 <List className={classes.list}>
@@ -45,7 +45,10 @@ export default function SectionNavbar() {
                       onClick={e => e.preventDefault()}
                       color="transparent"
                     >
-                      <AccountCircle className={classes.icons} /> {user.name}
+                      <AccountCircle className={classes.icons} /> 
+                      <Link to="/profile-page" className={classes.link}>
+                      {user.name}
+                      </Link>
                     </Button>
                   </ListItem>
                   <ListItem className={classes.listItem}>
@@ -69,7 +72,7 @@ export default function SectionNavbar() {
         
 
             <Header
-              brand="Capstone Project"
+              brand="Eleos"
               color="primary"
               rightLinks={
                 <List className={classes.list}>

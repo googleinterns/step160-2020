@@ -10,9 +10,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Button from "components/CustomButtons/Button.js";
-import Card from "components/Card/Card.js";
-import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
+import Card from "../../../material-ui/src/components/Card/Card.js.js";
+import CardBody from "../../../material-ui/src/components/Card/CardBody.js.js";
+import CardFooter from "../../../material-ui/src/components/Card/CardFooter.js.js";
 
 import styles from "assets/jss/material-kit-react/views/landingPageSections/teamStyle.js";
 
