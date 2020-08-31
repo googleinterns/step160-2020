@@ -31,7 +31,7 @@ export default function SurveyResponseDialog(props) {
           </IconButton>
         </DialogTitle>
         <DialogContent dividers>
-          <p>{'Survey submitted on ' + props.date + ' from ' + props.response.city + ', ' + props.response.state + '.'}</p>
+          <p>{'Survey submitted on ' + props.date.toString() + ' from ' + props.response.city + ', ' + props.response.state + '.'}</p>
           <p>{'Text submitted: "' + props.response.text + '"'}</p>
           <Radar data={props.data}/>
         </DialogContent>
