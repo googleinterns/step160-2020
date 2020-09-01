@@ -1,9 +1,7 @@
 package com.google.sps.servlets;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
 
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
@@ -13,9 +11,11 @@ import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.PathElement;
 import com.google.cloud.datastore.testing.LocalDatastoreHelper;
+import com.google.gson.*;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 
 /**
  * Tests for the SurveyServlet class.
@@ -86,7 +87,7 @@ public class SurveyServletTest extends TestData {
         Set<SurveyResponse> expected = new HashSet<>();
         expected.add(expectedData.get("Foo"));
         expected.add(expectedData.get("Bar"));
-        assertEquals(expected, SurveyServlet.queryByFeeling(PanasFeelings.JITTERY));
+        assertThatJson(createJson(expected)).isEqualTo(SurveyServlet.queryByFeeling("JITTERY"));
     }
 
     @Test
@@ -97,43 +98,41 @@ public class SurveyServletTest extends TestData {
         expected.add(expectedData.get("Foo"));
         expected.add(expectedData.get("Bar"));
         expected.add(expectedData.get("Baz"));
-        assertEquals(expected, SurveyServlet.queryByFeeling(PanasFeelings.ALERT));
+        assertThatJson(createJson(expected)).isEqualTo(SurveyServlet.queryByFeeling("ALERT"));
     }
 
     @Test
     public void testQueryByFeelingNone() {
         loadTestData(false);
         Set<SurveyResponse> expected = new HashSet<>();
-        assertEquals(expected, SurveyServlet.queryByFeeling(PanasFeelings.HOSTILE));
+        assertThatJson(createJson(expected)).isEqualTo(SurveyServlet.queryByFeeling("HOSTILE"));
     }
 
     @Test
     public void testQueryByUserSome() {
         Map<String, SurveyResponse> expectedData = generateExpectedData(false);
         loadTestData(false);
-        Set<SurveyResponse> expected = new HashSet<>();
+        List<SurveyResponse> expected = new ArrayList<>();
         expected.add(expectedData.get("Bar"));
-        assertEquals(expected, SurveyServlet.queryByUser("Bar"));
+        assertThatJson(createJson(expected)).isEqualTo(SurveyServlet.queryByUser("Bar"));
     }
 
     @Test
     public void testQueryByUserAll() {
         Map<String, SurveyResponse> expectedData = generateExpectedData(true);
         loadTestData(true);
-        Set<SurveyResponse> expected = new HashSet<>();
-        expected.add(expectedData.get("Foo"));
+        List<SurveyResponse> expected = new ArrayList<>();
         expected.add(expectedData.get("Bar"));
         expected.add(expectedData.get("Baz"));
-        Set<SurveyResponse> result = SurveyServlet.queryByUser("Foo");
-        assertEquals(expected, result);
-        assertEquals(3, result.size());
+        expected.add(expectedData.get("Foo"));
+        assertThatJson(createJson(expected)).isEqualTo(SurveyServlet.queryByUser("Foo"));
     }
 
     @Test
     public void testQueryByUserNone() {
         loadTestData(false);
-        Set<SurveyResponse> expected = new HashSet<>();
-        assertEquals(expected, SurveyServlet.queryByUser("Peter"));
+        List<SurveyResponse> expected = new ArrayList<>();
+        assertThatJson(createJson(expected)).isEqualTo(SurveyServlet.queryByUser("Peter"));
     }
 
     @Test
@@ -143,13 +142,15 @@ public class SurveyServletTest extends TestData {
         expected.add(PanasFeelings.ALERT);
         expected.add(PanasFeelings.JITTERY);
         expected.add(PanasFeelings.AFRAID);
-        assertEquals(expected, SurveyServlet.queryMostWidespread());
+        String dummyData = "foobar";
+        assertThatJson(createJson(expected)).isEqualTo(SurveyServlet.queryMostWidespread(dummyData));
     }
 
     @Test
     public void testQueryMostWidespreadEmpty() {
         List<PanasFeelings> expected = new ArrayList<>();
-        assertEquals(expected, SurveyServlet.queryMostWidespread());
+        String dummyData = "foobar";
+        assertThatJson(createJson(expected)).isEqualTo(SurveyServlet.queryMostWidespread(dummyData));
     }
 
     @Test
@@ -159,13 +160,15 @@ public class SurveyServletTest extends TestData {
         expected.add(PanasFeelings.ALERT);
         expected.add(PanasFeelings.JITTERY);
         expected.add(PanasFeelings.AFRAID);
-        assertEquals(expected, SurveyServlet.queryMostIntense());
+        String dummyData = "foobar";
+        assertThatJson(createJson(expected)).isEqualTo(SurveyServlet.queryMostIntense(dummyData));
     }
 
     @Test
     public void testQueryMostInteseEmpty() {
         List<PanasFeelings> expected = new ArrayList<>();
-        assertEquals(expected, SurveyServlet.queryMostIntense());
+        String dummyData = "foobar";
+        assertThatJson(createJson(expected)).isEqualTo(SurveyServlet.queryMostIntense(dummyData));
     }
 
 
@@ -249,5 +252,11 @@ public class SurveyServletTest extends TestData {
         Entity bazEntity = bazEntityBuilder.build();
 
         datastore.add(fooEntity, barEntity, bazEntity);
+    }
+
+    /** Converts the given collection {@code data} to its JSON string equivalent. */
+    private static <T> String createJson(Collection<T> responses) {
+        String responsesJson = new Gson().toJson(responses);
+        return responsesJson;
     }
 }
