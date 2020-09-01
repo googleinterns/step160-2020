@@ -1,4 +1,5 @@
 import React from "react";
+import { useAuth0 } from '@auth0/auth0-react';
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
@@ -29,19 +30,14 @@ export default function ProfilePage(props) {
   const classes = useStyles();
   const { ...rest } = props;
 
+  const {
+    isAuthenticated,
+    user,
+  } = useAuth0();
+
+  if (isAuthenticated){
   return (
     <div>
-      <Header
-        color="transparent"
-        brand="Eleos"
-        rightLinks={<HeaderLinks />}
-        fixed
-        changeColorOnScroll={{
-          height: 200,
-          color: "white"
-        }}
-        {...rest}
-      />
       <Parallax small filter image={require("assets/img/bg.jpg")} />
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div>
@@ -101,4 +97,7 @@ export default function ProfilePage(props) {
       <Footer />
     </div>
   );
+  } else {
+      return (null);
+  }
 }

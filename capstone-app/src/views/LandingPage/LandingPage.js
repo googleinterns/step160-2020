@@ -3,7 +3,6 @@ import React from "react";
 import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-
 // @material-ui/icons
 
 // core components
@@ -17,7 +16,7 @@ import styles from "assets/jss/material-kit-react/views/landingPage.js";
 // Sections for this page
 import ProductSection from "./Sections/ProductSection.js";
 import SectionModal from "./Sections/SectionModal.js";
-import SectionNavbar from "./Sections/SectionNavbar.js";
+import SectionNavbar from "./Sections/SectionNavbarLoggedin.js";
 
 const dashboardRoutes = [];
 
@@ -25,11 +24,11 @@ const useStyles = makeStyles(styles);
 
 export default function LandingPage(props) {
   const classes = useStyles();
-  const { ...rest } = props;
+
   return (
     <div>
      
-      <SectionNavbarSignup />
+      <SectionNavbar />
       <Parallax filter image={require("assets/img/landing-bg.jpg")}>
         <div className={classes.container}>
           <GridContainer >
@@ -54,15 +53,6 @@ export default function LandingPage(props) {
 
         </div>
       </Parallax>
-      <div className={classNames(classes.main, classes.mainRaised)}>
-        <div className={classes.container}>
-        
-          <ProductSection />
-        </div>
-        
-      </div>
-      <Footer />
     </div>
   );
 }
-
