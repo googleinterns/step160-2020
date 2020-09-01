@@ -2,16 +2,23 @@ import React from 'react';
 import SurveyResponseCard from './SurveyResponseCard.js';
 import SurveyResponseSummary from './SurveyResponseSummary.js';
 
-/** TODO */
+/** 
+ * Container component for the SurveyResponseSummary component and the SurveyResponseCard 
+ * components. 
+ */
 export default class SurveyResponseContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: 'peter',
+      user: 'peter',  // hardcoded for now - @DWIGHT PUT NAME HERE!
       responses: [],
     };
   }
 
+  /** 
+  * After first render, makes a GET request for user's survey responses and updates the 
+  * component's state. 
+  */
   async componentDidMount() {
     var requestParam = new URLSearchParams();
     requestParam.append('action', 'user');
@@ -22,20 +29,14 @@ export default class SurveyResponseContainer extends React.Component {
     );
 
     let data = await fetch(request).then(response => response.json());
-    console.log("data:");
-    console.log(data);
-
     this.setState({responses: data});
   }
 
   render () {
     var cards = [];
-    var index;
     for (var index = 0; index < this.state.responses.length; index++) {
       cards.push(<SurveyResponseCard response={this.state.responses[index]}/>)
     }
-    console.log("cards:");
-    console.log(cards);
 
     return (
       <div>

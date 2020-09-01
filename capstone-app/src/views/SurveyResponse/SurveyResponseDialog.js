@@ -5,15 +5,22 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import IconButton from '@material-ui/core/IconButton';
-import {Radar} from 'react-chartjs-2';
 import React from 'react';
+import {Radar} from 'react-chartjs-2';
 
+/** 
+ * Function component representing one survey response in a dialog, showing all its 
+ * information (city, state, text, timestamp, and feelings in a radar graph).
+ */
 export default function SurveyResponseDialog(props) {
   const [open, setOpen] = React.useState(false);
 
+  /** Opens the dialog. */
   const handleClickOpen = () => {
     setOpen(true);
   };
+  
+  /** Closes the dialog. */
   const handleClose = () => {
     setOpen(false);
   };

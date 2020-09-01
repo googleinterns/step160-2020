@@ -1,8 +1,8 @@
 import Button from '@material-ui/core/Button';
-import {Line} from 'react-chartjs-2';
 import React from 'react';
+import {Line} from 'react-chartjs-2';
 
-// TODO add all 20 feelings
+// All 20 PANAS feelings and the colors their lines should be on the graph.
 const feelings = {
   INTERESTED: {mainColor: 'rgba(244, 67, 54, 1)', bgColor: 'rgba(239, 154, 154, 1)'},
   DISTRESSED: {mainColor: 'rgba(233, 30, 99, 1)', bgColor: 'rgba(244, 143, 177, 1)'},
@@ -26,7 +26,10 @@ const feelings = {
   AFRAID: {mainColor: 'rgba(33, 33, 33, 1)', bgColor: 'rgba(97, 97, 97, 1)'},
 };
 
-// TODO documentation for all the things
+/** 
+ * Component for the summary graph, which compares the user's feelings against world feelings 
+ * over time. Includes buttons to display each of the 20 PANAS feelings.
+ */
 export default class SurveyResponseSummary extends React.Component {
   constructor(props) {
     super(props);
@@ -38,6 +41,10 @@ export default class SurveyResponseSummary extends React.Component {
     };
   }
 
+  /** 
+  * Makes a GET request for all survey responses containing the specified feeling, then passes the 
+  * responses along to be sorted.
+  */
   async handleClick(feeling, event) {
     if (!this.state.loaded.includes(feeling)) {
       var newLoaded = this.state.loaded.concat(feeling);
@@ -51,16 +58,20 @@ export default class SurveyResponseSummary extends React.Component {
         'https://manage-at-scale-step-2020.appspot.com/survey?' + requestParam
       );
 
-      let data = await fetch(request).then(response => response.json());
+      let responses = await fetch(request).then(response => response.json());
 
       this.sortResponsesByUser(data, feeling);
     }
   }
 
-  sortResponsesByUser(data, feeling) {
+  /** 
+  * Sorts responses by user and adds two new datasets to the graph - one representing how the user 
+  * has logged the specified feeling over time, and the other representing how the world has done so.
+  */
+  sortResponsesByUser(responses, feeling) {
     var userResponses = [];
     var worldResponses = [];
-    for (const response of data) {
+    for (const response of responses) {
       if (response.user === this.props.user) {
         userResponses.push(response);
       } else {
@@ -75,6 +86,10 @@ export default class SurveyResponseSummary extends React.Component {
     this.setState({ data: newData });
   }
 
+  /** 
+  * Builds a dataset of (x,y) values from the given responses, where the x-axis is time 
+  * and the y-axis is the intensity of the specified feeling.
+  */
   buildDataset(responses, isUserData, feeling) {
     var sortedResponses = responses.sort(this.compareTimestamp);
     const dataset = {
@@ -100,7 +115,6 @@ export default class SurveyResponseSummary extends React.Component {
       QUITE_A_BIT: 4, 
       EXTREMELY: 5
     };
-
     for (const response of sortedResponses) {
       var newDataPoint = {
         x: new Date(response.timestamp),
@@ -109,10 +123,10 @@ export default class SurveyResponseSummary extends React.Component {
       
       dataset.data.push(newDataPoint);
     }
-
     return dataset;
   }
 
+  /** A comparison function for sorting survey response objects based on their timestamps. */
   compareTimestamp(fooResponse, barResponse) {
     if (fooResponse.timestamp < barResponse.timestamp) {
       return -1;
