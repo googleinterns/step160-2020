@@ -1,3 +1,4 @@
+import './index.css';
 import * as serviceWorker from './serviceWorker';
 import React from "react";
 import ReactDOM from "react-dom";
@@ -10,7 +11,7 @@ import "./assets/scss/material-kit-react.scss";
 // pages for this product
 
 import LandingPage from "./views/LandingPage/LandingPage.js";
-
+import ProfilePage from "./views/ProfilePage/ProfilePage.js";
 
 var hist = createBrowserHistory();
 serviceWorker.unregister();
@@ -18,7 +19,10 @@ serviceWorker.unregister();
 ReactDOM.render(
   <Router history={hist}>
     <Switch>
+      
+      <Route path="/profile-page" component={ProfilePage} /> 
       <Route path="/" component={LandingPage} /> 
+
     </Switch>
   </Router>,
   document.getElementById("root")
@@ -31,6 +35,7 @@ ReactDOM.render(
     redirectUri={'https://5000-cs-588358946862-default.us-central1.cloudshell.dev/?authuser=0&environment_name=default'}
   >
     <LandingPage />
+    <ProfilePage />
   </Auth0Provider>,
   document.getElementById("root")
 );

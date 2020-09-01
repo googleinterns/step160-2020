@@ -16,7 +16,9 @@ import styles from "assets/jss/material-kit-react/views/landingPage.js";
 // Sections for this page
 import ProductSection from "./Sections/ProductSection.js";
 import SectionModal from "./Sections/SectionModal.js";
-import SectionNavbar from "./Sections/SectionNavbar.js";
+import SectionNavbar from "./Sections/SectionNavbarLoggedin.js";
+
+const dashboardRoutes = [];
 
 const useStyles = makeStyles(styles);
 
@@ -41,9 +43,9 @@ export default function LandingPage(props) {
               
             </GridItem>
 
-            <GridItem xs={6} sm={6} md={6} lg={6} xl={6}>
+            <GridItem xs={6} sm={6} md={6} lg={6} xl={6} >
             <div id="embed-map">               
-                <iframe width="500" height="500" src="https://datastudio.google.com/embed/reporting/2848f178-862d-4a89-9567-fba28d475595/page/N4NZB" ></iframe>
+                <iframe width="600" height="600" src="https://datastudio.google.com/embed/reporting/2848f178-862d-4a89-9567-fba28d475595/page/N4NZB" ></iframe>
             </div>
             </GridItem>
 
@@ -51,14 +53,6 @@ export default function LandingPage(props) {
 
         </div>
       </Parallax>
-      <div className={classNames(classes.main, classes.mainRaised)}>
-        <div className={classes.container}>
-        
-          <ProductSection />
-        </div>
-        
-      </div>
-      <Footer />
     </div>
   );
 }
