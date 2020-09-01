@@ -15,7 +15,7 @@ import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.Value;
 import com.google.common.collect.ImmutableMap;
 import com.google.cloud.Timestamp;
-import com.google.gson.*;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
