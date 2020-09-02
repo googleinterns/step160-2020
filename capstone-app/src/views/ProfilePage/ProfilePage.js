@@ -7,9 +7,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from '@material-ui/core/TextField';
 
 // @material-ui/icons
-import Palette from "@material-ui/icons/Palette";
 import Favorite from "@material-ui/icons/Favorite";
 import LibraryBooksSharpIcon from '@material-ui/icons/LibraryBooksSharp';
+import Palette from "@material-ui/icons/Palette";
+import Timeline from "@material-ui/icons/Timeline";
+import ViewModule from "@material-ui/icons/ViewModule";
 // core components
 import Header from "components/Header/Header.js";
 import Footer from "components/Footer/Footer.js";
@@ -23,6 +25,8 @@ import styles from "assets/jss/material-kit-react/views/profilePage.js";
 
 // Sections for this page
 import Journal from "./Sections/Journal.js";
+import SurveyResponseContainer from "./Sections/SurveyResponse/SurveyResponseContainer.js";
+import SurveyResponseSummary from "./Sections/SurveyResponse/SurveyResponseSummary.js";
 
 const useStyles = makeStyles(styles);
 
@@ -52,6 +56,34 @@ export default function ProfilePage(props) {
                   contentGrid: { xs: 10, sm: 10, md: 10 }
                 }}
                   tabs={[
+                    {
+                      tabButton: "Feelings Log",
+                      tabIcon: ViewModule,
+                      tabContent: (
+                        <GridContainer spacing={4} justify="center">
+                        <GridItem >
+
+                        <SurveyResponseContainer />
+                        
+                        </GridItem>
+                        </GridContainer>
+                      )
+                    },
+                    {
+                      tabButton: "Feelings Over Time",
+                      tabIcon: Timeline,
+
+                      // @DWIGHT pull username from auth to be a prop below!
+                      tabContent: (
+                        <GridContainer spacing={4} justify="center">
+                        <GridItem >
+
+                        <SurveyResponseSummary user="peter" />
+                        
+                        </GridItem>
+                        </GridContainer>
+                      )
+                    },
                     {
                       tabButton: "Journal",
                       tabIcon: LibraryBooksSharpIcon,

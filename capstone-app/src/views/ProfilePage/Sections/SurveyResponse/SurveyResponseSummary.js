@@ -60,7 +60,7 @@ export default class SurveyResponseSummary extends React.Component {
 
       let responses = await fetch(request).then(response => response.json());
 
-      this.sortResponsesByUser(data, feeling);
+      this.sortResponsesByUser(responses, feeling);
     }
   }
 

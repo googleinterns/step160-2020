@@ -16,7 +16,7 @@ import styles from "assets/jss/material-kit-react/views/landingPage.js";
 // Sections for this page
 import ProductSection from "./Sections/ProductSection.js";
 import SectionModal from "./Sections/SectionModal.js";
-import SectionNavbar from "./Sections/SectionNavbarLoggedin.js";
+import SectionNavbarSignup from "./Sections/SectionNavbarSignup.js";
 
 const dashboardRoutes = [];
 

@@ -2,10 +2,7 @@ import React from 'react';
 import SurveyResponseCard from './SurveyResponseCard.js';
 import SurveyResponseSummary from './SurveyResponseSummary.js';
 
-/** 
- * Container component for the SurveyResponseSummary component and the SurveyResponseCard 
- * components. 
- */
+/** Container component for SurveyResponseCard components. */
 export default class SurveyResponseContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -40,7 +37,6 @@ export default class SurveyResponseContainer extends React.Component {
 
     return (
       <div>
-        <SurveyResponseSummary user={this.state.user} />
         {cards}
       </div>
     );

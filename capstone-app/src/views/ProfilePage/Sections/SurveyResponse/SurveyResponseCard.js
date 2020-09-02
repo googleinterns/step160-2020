@@ -8,7 +8,7 @@ import {Radar} from 'react-chartjs-2';
  * survey response represented as a radar graph, and a button to show more details in a dialog.
  */
 export default function SurveyResponseCard(props) {
-  var date = new Date(this.props.response.timestamp);
+  var date = new Date(props.response.timestamp);
 
   var data = {
     labels: [
@@ -58,18 +58,18 @@ export default function SurveyResponseCard(props) {
 
   data.labels.forEach ((feeling) => {
     data.datasets[0].data.push(
-      intensities[this.props.response.feelings[feeling]]
+      intensities[props.response.feelings[feeling]]
     );
   });
 
   return (
     <Card
-      key={this.props.response.timestamp}
+      key={props.response.timestamp}
       className="SurveyResponseCard"
     >
       <Radar data={data}/>
       <p>{date.toDateString()}</p>
-      <SurveyResponseDialog date={date} data={data} response={this.props.response}/>
+      <SurveyResponseDialog date={date} data={data} response={props.response}/>
     </Card>
   );
 }

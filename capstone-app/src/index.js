@@ -12,7 +12,6 @@ import "./assets/scss/material-kit-react.scss";
 
 import LandingPage from "./views/LandingPage/LandingPage.js";
 import ProfilePage from "./views/ProfilePage/ProfilePage.js";
-import SurveyResponseContainer from "./views/SurveyResponse/SurveyResponseContainer.js";
 
 var hist = createBrowserHistory();
 serviceWorker.unregister();
@@ -20,7 +19,6 @@ serviceWorker.unregister();
 ReactDOM.render(
   <Router history={hist}>
     <Switch>     
-      <Route path="/analysis" component={SurveyResponseContainer} />
       <Route path="/profile-page" component={ProfilePage} /> 
       <Route path="/" component={LandingPage} /> 
     </Switch>
