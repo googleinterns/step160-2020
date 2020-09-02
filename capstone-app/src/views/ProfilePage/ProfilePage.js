@@ -3,7 +3,6 @@ import React from "react";
 import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import TextField from '@material-ui/core/TextField';
 
 // @material-ui/icons
 import Palette from "@material-ui/icons/Palette";
@@ -12,7 +11,6 @@ import LibraryBooksSharpIcon from '@material-ui/icons/LibraryBooksSharp';
 // core components
 import Header from "components/Header/Header.js";
 import Footer from "components/Footer/Footer.js";
-import Button from "components/CustomButtons/Button.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import HeaderLinks from "components/Header/HeaderLinks.js";
