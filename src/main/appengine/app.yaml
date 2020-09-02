@@ -1,0 +1,19 @@
+runtime: nodejs10
+ 
+resources:
+ cpu: 1
+ memory_gb: 0.5
+ disk_size_gb: 100
+
+ handlers:
+  - url: /static
+    static_dir: build/static
+
+  - url: /(.*\.(json|ico|js))$
+    static_files: build/\1
+    upload: build/.*\.(json|ico|js)$
+
+  - url: .*
+    static_files: build/index.html
+    upload: build/index.html
+
