@@ -17,7 +17,7 @@ import styles from "assets/jss/material-kit-react/views/landingPage.js";
 // Sections for this page
 import ProductSection from "./Sections/ProductSection.js";
 import SectionModal from "./Sections/SectionModal.js";
-import SectionNavbarSignup from "./Sections/SectionNavbarLoggedin.js";
+import SectionNavbar from "./Sections/SectionNavbar.js";
 
 const useStyles = makeStyles(styles);
 
@@ -39,7 +39,7 @@ export default function LandingPage(props) {
               See how others around you are feeling
               </h3>
               <br />
-              <SectionModal />
+              <SectionModal width="80%"/>
               
             </GridItem>
 
@@ -50,9 +50,6 @@ export default function LandingPage(props) {
             </GridItem>
 
           </GridContainer>
-
-         
-          
 
         </div>
       </Parallax>

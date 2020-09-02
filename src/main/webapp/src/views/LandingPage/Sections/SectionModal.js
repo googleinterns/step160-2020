@@ -1,21 +1,21 @@
 import React from "react";
 // @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-import Slide from "@material-ui/core/Slide";
-import IconButton from "@material-ui/core/IconButton";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Dialog from "@material-ui/core/Dialog";
+import IconButton from "@material-ui/core/IconButton";
+import Slide from "@material-ui/core/Slide";
+import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
-import LibraryBooks from "@material-ui/icons/LibraryBooks";
 import Close from "@material-ui/icons/Close";
+import LibraryBooks from "@material-ui/icons/LibraryBooks";
 // core components
+import Button from "components/CustomButtons/Button.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import Button from "components/CustomButtons/Button.js";
-
 import styles from "assets/jss/material-kit-react/javascriptStyles.js";
+import Survey from "views/LandingPage/Sections/Survey.js";
 
 const useStyles = makeStyles(styles);
 
@@ -34,7 +34,7 @@ export default function SectionModal() {
       <div className={classes.container}>
         
         <GridContainer>
-          <GridItem xs={8} sm={8} md={8} lg={8} xl={8}>
+          <GridItem xs={6} sm={6} md={6} lg={6} xl={6}>
             
             <GridContainer>
               <GridItem xs={6} sm={6} md={6} lg={6} xl={6}>
@@ -57,7 +57,7 @@ export default function SectionModal() {
                   onClose={() => setClassicModal(false)}
                   aria-labelledby="classic-modal-slide-title"
                   aria-describedby="classic-modal-slide-description"
-                >
+                 >
                   <DialogTitle
                     id="classic-modal-slide-title"
                     disableTypography
@@ -72,25 +72,11 @@ export default function SectionModal() {
                     >
                       <Close className={classes.modalClose} />
                     </IconButton>
-                    <h4 className={classes.modalTitle}>FORM TITLE</h4>
+                    <h4 className={classes.modalTitle}>How are you feeling?</h4>
                   </DialogTitle>
-                  <DialogContent
-                    id="classic-modal-slide-description"
-                    className={classes.modalBody}
-                  >
-                    <p>
-                      INSERT DRAG AND DROP HERE
-                    </p>
-                  </DialogContent>
-                  <DialogActions className={classes.modalFooter}>
-                    <Button
-                      onClick={() => setClassicModal(false)}
-                      color="danger"
-                      simple
-                    >
-                      SUBMIT
-                    </Button>
-                  </DialogActions>
+                  <Survey />
+                  
+                  
                 </Dialog>
               </GridItem>
             </GridContainer>
