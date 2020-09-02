@@ -17,27 +17,29 @@ import styles from "assets/jss/material-kit-react/views/landingPage.js";
 // Sections for this page
 import ProductSection from "./Sections/ProductSection.js";
 import SectionModal from "./Sections/SectionModal.js";
-import SectionNavbar from "./Sections/SectionNavbar.js";
-
-const dashboardRoutes = [];
+import SectionNavbar from "./Sections/SectionNavbarLoggedin.js";
 
 const useStyles = makeStyles(styles);
 
 export default function LandingPage(props) {
   const classes = useStyles();
-  const { ...rest } = props;
   return (
     <div>
      
-      <SectionNavbarSignup />
-      <Parallax filter image={require("assets/img/landing-bg.jpg")}>
+      <SectionNavbar />
+      <Parallax filter image={require("assets/img/olive.jpg")}>
         <div className={classes.container}>
           <GridContainer >
             <GridItem xs={6} sm={6} md={6} lg={6} xl={6} >
               <h1 className={classes.title}>Feelings of the World</h1>
+              <h1 className={classes.title}>Eleos</h1>
               <h4>
-               insert explanation
+                Feeling of the World.
               </h4>
+
+              <h3>
+              See how others around you are feeling
+              </h3>
               
               <br />
               <SectionModal width="80%"/>
