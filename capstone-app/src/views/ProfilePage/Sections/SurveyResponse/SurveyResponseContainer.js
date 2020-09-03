@@ -32,7 +32,9 @@ export default class SurveyResponseContainer extends React.Component {
   render () {
     var cards = [];
     for (var index = 0; index < this.state.responses.length; index++) {
-      cards.push(<SurveyResponseCard response={this.state.responses[index]}/>)
+      cards.push(
+        <SurveyResponseCard response={this.state.responses[index]} intensities={this.props.intensities}/>
+      )
     }
 
     return (

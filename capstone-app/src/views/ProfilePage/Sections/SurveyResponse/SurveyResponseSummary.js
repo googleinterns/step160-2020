@@ -107,18 +107,10 @@ export default class SurveyResponseSummary extends React.Component {
       dataset.borderColor = feelings[feeling].bgColor;
     }
 
-    var intensities = {
-      NOT_AT_ALL: 0, 
-      VERY_SLIGHTLY: 1, 
-      A_LITTLE: 2, 
-      MODERATELY: 3, 
-      QUITE_A_BIT: 4, 
-      EXTREMELY: 5
-    };
     for (const response of sortedResponses) {
       var newDataPoint = {
         x: new Date(response.timestamp),
-        y: intensities[response.feelings[feeling]]
+        y: this.props.intensities[response.feelings[feeling]]
       };
       
       dataset.data.push(newDataPoint);

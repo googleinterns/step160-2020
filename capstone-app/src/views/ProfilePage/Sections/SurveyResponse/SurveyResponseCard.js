@@ -47,18 +47,9 @@ export default function SurveyResponseCard(props) {
       ]
     };
 
-  var intensities = {
-    NOT_AT_ALL: 0, 
-    VERY_SLIGHTLY: 1, 
-    A_LITTLE: 2, 
-    MODERATELY: 3, 
-    QUITE_A_BIT: 4, 
-    EXTREMELY: 5
-  };
-
   data.labels.forEach ((feeling) => {
     data.datasets[0].data.push(
-      intensities[props.response.feelings[feeling]]
+      props.intensities[props.response.feelings[feeling]]
     );
   });
 

@@ -39,6 +39,15 @@ export default function ProfilePage(props) {
     user,
   } = useAuth0();
 
+  const intensities = {
+      NOT_AT_ALL: 0, 
+      VERY_SLIGHTLY: 1, 
+      A_LITTLE: 2, 
+      MODERATELY: 3, 
+      QUITE_A_BIT: 4, 
+      EXTREMELY: 5
+  };
+
   if (isAuthenticated){
   return (
     <div>
@@ -63,7 +72,7 @@ export default function ProfilePage(props) {
                         <GridContainer spacing={4} justify="center">
                         <GridItem >
 
-                        <SurveyResponseContainer />
+                        <SurveyResponseContainer intensities={intensities}/>
                         
                         </GridItem>
                         </GridContainer>
@@ -78,7 +87,7 @@ export default function ProfilePage(props) {
                         <GridContainer spacing={4} justify="center">
                         <GridItem >
 
-                        <SurveyResponseSummary user="peter" />
+                        <SurveyResponseSummary user="peter" intensities={intensities}/>
                         
                         </GridItem>
                         </GridContainer>
