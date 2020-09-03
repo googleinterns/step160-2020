@@ -46,6 +46,7 @@ public class SurveyServlet extends HttpServlet {
         String data = request.getParameter("data");
         String responseText = actions.get(action).apply(data);
 
+        response.addHeader("Access-Control-Allow-Origin", "*");  // change to URL of React app once it's deployed
         response.setContentType("text/html;");
         response.getWriter().println(responseText);
     }

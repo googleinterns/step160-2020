@@ -18,11 +18,9 @@ serviceWorker.unregister();
 
 ReactDOM.render(
   <Router history={hist}>
-    <Switch>
-      
+    <Switch>     
       <Route path="/profile-page" component={ProfilePage} /> 
       <Route path="/" component={LandingPage} /> 
-
     </Switch>
   </Router>,
   document.getElementById("root")
