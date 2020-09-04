@@ -1,4 +1,5 @@
 import React from "react";
+import { useAuth0 } from '@auth0/auth0-react';
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
@@ -9,11 +10,9 @@ import Palette from "@material-ui/icons/Palette";
 import Favorite from "@material-ui/icons/Favorite";
 import LibraryBooksSharpIcon from '@material-ui/icons/LibraryBooksSharp';
 // core components
-import Header from "components/Header/Header.js";
 import Footer from "components/Footer/Footer.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import HeaderLinks from "components/Header/HeaderLinks.js";
 import NavPills from "components/NavPills/NavPills.js";
 import Parallax from "components/Parallax/Parallax.js";
 import styles from "assets/jss/material-kit-react/views/profilePage.js";
@@ -25,21 +24,15 @@ const useStyles = makeStyles(styles);
 
 export default function ProfilePage(props) {
   const classes = useStyles();
-  const { ...rest } = props;
 
+  const {
+    isAuthenticated,
+    user,
+  } = useAuth0();
+
+  if (isAuthenticated){
   return (
     <div>
-      <Header
-        color="transparent"
-        brand="Eleos"
-        rightLinks={<HeaderLinks />}
-        fixed
-        changeColorOnScroll={{
-          height: 200,
-          color: "white"
-        }}
-        {...rest}
-      />
       <Parallax small filter image={require("assets/img/olivetree.jpg")} />
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div>
@@ -99,4 +92,7 @@ export default function ProfilePage(props) {
       <Footer />
     </div>
   );
+  } else {
+      return (null);
+  }
 }

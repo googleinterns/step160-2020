@@ -49,7 +49,7 @@ export default class Journal extends React.Component {
 
   render() {
     return (
-      <form>
+      <form action="/journal" method="POST">
         <TextField 
             required 
             id="journal-title"

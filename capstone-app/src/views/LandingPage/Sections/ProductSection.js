@@ -23,6 +23,7 @@ export default function ProductSection() {
     <div className={classes.section}>
       <GridContainer justify="center">
         <GridItem xs={12} sm={12} md={8}>
+        
           <h2 className={classes.title}>Eleos</h2>
           <h5 className={classes.description}>
             For the past few months, many industries have told their employees to work from home, 

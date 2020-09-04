@@ -31,7 +31,6 @@ export default function LandingPage(props) {
         <div className={classes.container}>
           <GridContainer >
             <GridItem xs={6} sm={6} md={6} lg={6} xl={6} >
-              <h1 className={classes.title}>Feelings of the World</h1>
               <h1 className={classes.title}>Eleos</h1>
               <h4>
                 Feeling of the World.
@@ -63,7 +62,6 @@ export default function LandingPage(props) {
         </div>
         
       </div>
-      <Footer />
     </div>
   );
 }
