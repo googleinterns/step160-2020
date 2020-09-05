@@ -14,13 +14,17 @@ export default class Journal extends React.Component {
     this.classes = makeStyles(styles);
     this.state = {
       title: '',
-      journal: '', 
+      journal: '',
+      user: this.props.user,
+      
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     
   }
+  
+
 
   /** updates when the user adds text */
   handleChange(event) {
@@ -46,6 +50,7 @@ export default class Journal extends React.Component {
     fetch(request).then(response => console.log(response));
   }
 
+    
 
   render() {
     return (
@@ -72,7 +77,6 @@ export default class Journal extends React.Component {
             value = {this.state.journal}
             onChange = {this.handleChange}
         />
-    
         <Button 
             simple 
             color="info" 

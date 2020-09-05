@@ -95,7 +95,7 @@ export default function ProfilePage(props) {
                         <GridContainer spacing={4} justify="center">
                         <GridItem >
 
-                        <Journal />
+                        <Journal user={user.name} />
                         
                         </GridItem>
                         </GridContainer>

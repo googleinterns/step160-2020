@@ -42,6 +42,7 @@
         <artifactId>google-cloud-language</artifactId>
         <version>1.100.0</version>
      </dependency>
+     
     <!-- https://mvnrepository.com/artifact/com.google.cloud/google-cloud-datastore -->
     <dependency>
         <groupId>com.google.cloud</groupId>
