@@ -11,18 +11,16 @@ import "./assets/scss/material-kit-react.scss";
 // pages for this product
 
 import LandingPage from "./views/LandingPage/LandingPage.js";
-import ProfilePage from "./views/ProfilePage/ProfilePage_copy.js";
+import ProfilePage from "./views/ProfilePage/ProfilePage.js";
 
 var hist = createBrowserHistory();
 serviceWorker.unregister();
 
 ReactDOM.render(
   <Router history={hist}>
-    <Switch>
-      
+    <Switch>     
       <Route path="/profile-page" component={ProfilePage} /> 
       <Route path="/" component={LandingPage} /> 
-
     </Switch>
   </Router>,
   document.getElementById("root")
@@ -30,9 +28,9 @@ ReactDOM.render(
 
 ReactDOM.render(
   <Auth0Provider
-    domain="eleos.us.auth0.com"
-    clientId="S67WqW3SLpYn1pbsKyAYifI6ehs5X5Pd"
-    redirectUri={'https://5000-cs-588358946862-default.us-central1.cloudshell.dev/?authuser=0&environment_name=default'}
+    domain="dev-12xuu4pl.us.auth0.com"
+    clientId="8oXDmm0KJY6sBevDcv5Uw9GIR8ctKj3W"
+    redirectUri={'https://manage-at-scale-step-2020.uc.r.appspot.com/'}
   >
     <LandingPage />
     <ProfilePage />

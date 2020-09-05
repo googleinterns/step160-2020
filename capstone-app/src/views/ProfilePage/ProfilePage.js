@@ -6,9 +6,11 @@ import classNames from "classnames";
 import { makeStyles } from "@material-ui/core/styles";
 
 // @material-ui/icons
-import Palette from "@material-ui/icons/Palette";
 import Favorite from "@material-ui/icons/Favorite";
 import LibraryBooksSharpIcon from '@material-ui/icons/LibraryBooksSharp';
+import Palette from "@material-ui/icons/Palette";
+import Timeline from "@material-ui/icons/Timeline";
+import ViewModule from "@material-ui/icons/ViewModule";
 // core components
 import Footer from "components/Footer/Footer.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -19,6 +21,8 @@ import styles from "assets/jss/material-kit-react/views/profilePage.js";
 
 // Sections for this page
 import Journal from "./Sections/Journal.js";
+import SurveyResponseContainer from "./Sections/SurveyResponse/SurveyResponseContainer.js";
+import SurveyResponseSummary from "./Sections/SurveyResponse/SurveyResponseSummary.js";
 
 const useStyles = makeStyles(styles);
 
@@ -29,6 +33,16 @@ export default function ProfilePage(props) {
     isAuthenticated,
     user,
   } = useAuth0();
+
+
+  const intensities = {
+      NOT_AT_ALL: 0, 
+      VERY_SLIGHTLY: 1, 
+      A_LITTLE: 2, 
+      MODERATELY: 3, 
+      QUITE_A_BIT: 4, 
+      EXTREMELY: 5
+  };
 
   if (isAuthenticated){
   return (
@@ -47,6 +61,33 @@ export default function ProfilePage(props) {
                   contentGrid: { xs: 10, sm: 10, md: 10 }
                 }}
                   tabs={[
+                    {
+                      tabButton: "Feelings Log",
+                      tabIcon: ViewModule,
+                      tabContent: (
+                        <GridContainer spacing={4} justify="center">
+                        <GridItem >
+
+                        <SurveyResponseContainer user={user.name} intensities={intensities}/>
+                        
+                        </GridItem>
+                        </GridContainer>
+                      )
+                    },
+                    {
+                      tabButton: "Feelings Over Time",
+                      tabIcon: Timeline,
+
+                      tabContent: (
+                        <GridContainer spacing={4} justify="center">
+                        <GridItem >
+
+                        <SurveyResponseSummary user={user.name} intensities={intensities}/>
+                        
+                        </GridItem>
+                        </GridContainer>
+                      )
+                    },
                     {
                       tabButton: "Journal",
                       tabIcon: LibraryBooksSharpIcon,
@@ -71,17 +112,7 @@ export default function ProfilePage(props) {
                         </GridContainer>
                       )
                     },
-                    {
-                      tabButton: "Analysis",
-                      tabIcon: Favorite,
-                      tabContent: (
-                        <GridContainer justify="center">
-                          <GridItem xs={12} sm={12} md={4}>
-                            
-                          </GridItem>
-                        </GridContainer>
-                      )
-                    }
+                    
                   ]}
                 />
               </GridItem>

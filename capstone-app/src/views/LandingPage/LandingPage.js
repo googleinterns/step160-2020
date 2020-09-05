@@ -3,7 +3,6 @@ import React from "react";
 import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-
 // @material-ui/icons
 
 // core components
@@ -19,15 +18,18 @@ import ProductSection from "./Sections/ProductSection.js";
 import SectionModal from "./Sections/SectionModal.js";
 import SectionNavbar from "./Sections/SectionNavbarLoggedin.js";
 
+
 const useStyles = makeStyles(styles);
 
 export default function LandingPage(props) {
   const classes = useStyles();
+
   return (
     <div>
      
       <SectionNavbar />
       <Parallax filter image={require("assets/img/olive.jpg")}>
+
         <div className={classes.container}>
           <GridContainer >
             <GridItem xs={6} sm={6} md={6} lg={6} xl={6} >
@@ -59,10 +61,12 @@ export default function LandingPage(props) {
         <div className={classes.container}>
         
           <ProductSection />
+          
+
         </div>
         
       </div>
+
     </div>
   );
 }
-
