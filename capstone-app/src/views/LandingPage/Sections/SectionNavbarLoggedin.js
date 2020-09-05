@@ -37,7 +37,7 @@ export default function SectionNavbar() {
 
             <Header
               brand="Eleos"
-              color="primary"
+              color="info"
               rightLinks={
                 <List className={classes.list}>
                   <ListItem className={classes.listItem}>
@@ -73,7 +73,7 @@ export default function SectionNavbar() {
 
             <Header
               brand="Eleos"
-              color="primary"
+              color="info"
               rightLinks={
                 <List className={classes.list}>
                   <ListItem className={classes.listItem}>
@@ -89,3 +89,4 @@ export default function SectionNavbar() {
     );
   }
 }
+

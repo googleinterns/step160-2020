@@ -4,10 +4,10 @@ import SurveyResponseSummary from './SurveyResponseSummary.js';
 
 /** Container component for SurveyResponseCard components. */
 export default class SurveyResponseContainer extends React.Component {
-  constructor(props) {
+
+  constructor(props) { 
     super(props);
     this.state = {
-      user: 'peter',  // hardcoded for now - @DWIGHT PUT NAME HERE!
       responses: [],
     };
   }
@@ -19,7 +19,7 @@ export default class SurveyResponseContainer extends React.Component {
   async componentDidMount() {
     var requestParam = new URLSearchParams();
     requestParam.append('action', 'user');
-    requestParam.append('data', this.state.user);
+    requestParam.append('data', this.props.user);
     
     const request = new Request(
       'https://manage-at-scale-step-2020.appspot.com/survey?' + requestParam
