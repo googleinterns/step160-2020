@@ -28,9 +28,9 @@ ReactDOM.render(
 
 ReactDOM.render(
   <Auth0Provider
-    domain="eleos.us.auth0.com"
-    clientId="S67WqW3SLpYn1pbsKyAYifI6ehs5X5Pd"
-    redirectUri={'https://5000-cs-588358946862-default.us-central1.cloudshell.dev/?authuser=0&environment_name=default'}
+    domain="dev-12xuu4pl.us.auth0.com"
+    clientId="8oXDmm0KJY6sBevDcv5Uw9GIR8ctKj3W"
+    redirectUri={'https://manage-at-scale-step-2020.uc.r.appspot.com/'}
   >
     <LandingPage />
     <ProfilePage />
